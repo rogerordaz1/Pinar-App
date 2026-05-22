@@ -173,11 +173,16 @@ telefono        TEXT
 whatsapp        TEXT
 instagram       TEXT
 facebook        TEXT
+provincia       TEXT DEFAULT 'pinar_del_rio'
+municipio       TEXT
 abierto         BOOLEAN DEFAULT true
 verificado      BOOLEAN DEFAULT false
 activo          BOOLEAN DEFAULT true
 created_at      TIMESTAMPTZ DEFAULT now()
 updated_at      TIMESTAMPTZ DEFAULT now()
+
+-- Índice obligatorio para queries geoespaciales
+CREATE INDEX negocios_ubicacion_idx ON negocios USING GIST (ubicacion);
 ```
 
 **`categorias_producto`**
@@ -478,7 +483,7 @@ App
 ## 11. Estrategia de Escalabilidad Nacional
 
 ### Modelo de datos multi-provincia
-Agregar `provincia` y `municipio` a la tabla `negocios`. Las búsquedas siempre usan geolocalización (PostGIS), así que escalan naturalmente — no hay lógica por provincia.
+Los campos `provincia` y `municipio` ya están en la tabla `negocios` desde el diseño inicial. Las búsquedas siempre usan geolocalización (PostGIS), así que escalan naturalmente — no hay lógica por provincia.
 
 ### Distribución
 - APK distribuido por WhatsApp, Telegram y grupos de Facebook (no Google Play Store en el MVP)
