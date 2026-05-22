@@ -19,7 +19,7 @@ dependencies:
   get_it: ^7.7.0
 
   # Code Generation (runtime)
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.0.0
   json_annotation: ^4.9.0
 
   # Backend
@@ -55,10 +55,11 @@ dev_dependencies:
 
   # Code Generation
   build_runner: ^2.4.12
-  freezed: ^2.5.7
+  freezed: ^3.0.0
   json_serializable: ^6.8.0
 
   # Testing
+  bloc_test: ^9.1.7
   mocktail: ^1.0.4
 
   flutter_lints: ^4.0.0
