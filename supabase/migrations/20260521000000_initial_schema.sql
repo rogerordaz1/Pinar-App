@@ -41,10 +41,10 @@ create table public.categorias_negocio (
 -- ============================================================
 create table public.negocios (
   id           uuid primary key default gen_random_uuid(),
-  owner_id     uuid not null references public.users(id),
+  owner_id     uuid not null references public.users(id) on delete cascade,
   nombre       text not null,
   descripcion  text,
-  categoria_id uuid references public.categorias_negocio(id),
+  categoria_id uuid references public.categorias_negocio(id) on delete set null,
   logo_url     text,
   banner_url   text,
   direccion    text not null,
@@ -131,7 +131,7 @@ values
 -- ============================================================
 create table public.suscripciones (
   id               uuid primary key default gen_random_uuid(),
-  negocio_id       uuid not null references public.negocios(id),
+  negocio_id       uuid not null references public.negocios(id) on delete cascade,
   plan_id          uuid not null references public.planes_suscripcion(id),
   estado           text not null check (estado in ('activa', 'vencida', 'cancelada', 'pendiente')),
   fecha_inicio     date not null,
@@ -171,7 +171,7 @@ create table public.favoritos (
 create table public.resenas (
   id           uuid primary key default gen_random_uuid(),
   negocio_id   uuid not null references public.negocios(id) on delete cascade,
-  usuario_id   uuid not null references public.users(id),
+  usuario_id   uuid not null references public.users(id) on delete cascade,
   calificacion smallint not null check (calificacion between 1 and 5),
   comentario   text,
   created_at   timestamptz not null default now(),
