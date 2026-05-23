@@ -21,7 +21,12 @@ class SupabaseAuthDataSource implements AuthDataSource {
       if (response.user == null) {
         throw const app.AuthException('Login fallido');
       }
-      return await _fetchUserProfile(response.user!.id);
+      // Si public.users aún no existe o el perfil no fue creado, usamos datos del auth user
+      try {
+        return await _fetchUserProfile(response.user!.id);
+      } catch (_) {
+        return UserModel(id: response.user!.id, email: response.user!.email ?? email);
+      }
     } on app.AuthException {
       rethrow;
     } catch (e) {
@@ -72,7 +77,8 @@ class SupabaseAuthDataSource implements AuthDataSource {
     try {
       return await _fetchUserProfile(authUser.id);
     } catch (_) {
-      return null;
+      // Perfil no encontrado — devolvemos mínimo desde el auth user
+      return UserModel(id: authUser.id, email: authUser.email ?? '');
     }
   }
 
