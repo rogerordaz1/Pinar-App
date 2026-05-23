@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/auth/presentation/cubit/auth_state.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
@@ -18,6 +19,34 @@ class _PlaceholderPage extends StatelessWidget {
       appBar: AppBar(title: Text(name)),
       body: Center(
         child: Text(name, style: Theme.of(context).textTheme.titleLarge),
+      ),
+    );
+  }
+}
+
+class _TempHomePage extends StatelessWidget {
+  const _TempHomePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthUnauthenticated) {
+          context.go(RouteNames.login);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Home'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: 'Cerrar sesión',
+              onPressed: () => context.read<AuthCubit>().logout(),
+            ),
+          ],
+        ),
+        body: const Center(child: Text('Home — próximamente')),
       ),
     );
   }
@@ -55,7 +84,10 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.home,
-        builder: (_, __) => const _PlaceholderPage('Home'),
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const _TempHomePage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.busqueda,
