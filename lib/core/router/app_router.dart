@@ -1,6 +1,11 @@
-// lib/core/router/app_router.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/auth/presentation/pages/login_page.dart';
+import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../injection_container.dart';
 import 'route_names.dart';
 
 class _PlaceholderPage extends StatelessWidget {
@@ -12,10 +17,7 @@ class _PlaceholderPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(name)),
       body: Center(
-        child: Text(
-          name,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
+        child: Text(name, style: Theme.of(context).textTheme.titleLarge),
       ),
     );
   }
@@ -28,19 +30,28 @@ class AppRouter {
     routes: [
       GoRoute(
         path: RouteNames.splash,
-        builder: (_, __) => const _PlaceholderPage('Splash'),
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const SplashPage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.login,
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const LoginPage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.register,
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const RegisterPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.onboarding,
         builder: (_, __) => const _PlaceholderPage('Onboarding'),
-      ),
-      GoRoute(
-        path: RouteNames.login,
-        builder: (_, __) => const _PlaceholderPage('Login'),
-      ),
-      GoRoute(
-        path: RouteNames.register,
-        builder: (_, __) => const _PlaceholderPage('Register'),
       ),
       GoRoute(
         path: RouteNames.home,
@@ -92,13 +103,12 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.negocioActualizarDisponibilidad,
-        builder: (_, __) => const _PlaceholderPage('Actualizar Disponibilidad'),
+        builder: (_, __) =>
+            const _PlaceholderPage('Actualizar Disponibilidad'),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: Text('Ruta no encontrada: ${state.uri}'),
-      ),
+      body: Center(child: Text('Ruta no encontrada: ${state.uri}')),
     ),
   );
 }
