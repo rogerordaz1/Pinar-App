@@ -2,13 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Pinar App (debug)",
+      "name": "Cubamap (debug)",
       "request": "launch",
       "type": "dart",
       "args": ["--dart-define-from-file=dart_define.json"]
     },
     {
-      "name": "Pinar App (profile)",
+      "name": "Cubamap (profile)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",

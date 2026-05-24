@@ -1,8 +1,8 @@
 // test/core/usecases/usecase_test.dart
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pinar_app/core/errors/failures.dart';
-import 'package:pinar_app/core/usecases/usecase.dart';
+import 'package:cubamap/core/errors/failures.dart';
+import 'package:cubamap/core/usecases/usecase.dart';
 
 class _EchoUseCase extends UseCase<String, String> {
   @override

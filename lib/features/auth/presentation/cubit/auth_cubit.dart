@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../../../../core/usecases/usecase.dart';
+import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
+import '../../domain/repositories/auth_repository.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -11,12 +16,16 @@ class AuthCubit extends Cubit<AuthState> {
   final RegisterUseCase registerUseCase;
   final LogoutUseCase logoutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
+  final AuthRepository authRepository;
+
+  StreamSubscription<supabase.AuthState>? _googleAuthSub;
 
   AuthCubit({
     required this.loginUseCase,
     required this.registerUseCase,
     required this.logoutUseCase,
     required this.getCurrentUserUseCase,
+    required this.authRepository,
   }) : super(const AuthInitial());
 
   Future<void> checkAuth() async {
@@ -32,19 +41,22 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> login({required String email, required String password}) async {
     emit(const AuthLoading());
-    final result = await loginUseCase(
-        LoginParams(email: email, password: password));
+    final result =
+        await loginUseCase(LoginParams(email: email, password: password));
     result.fold(
       (failure) => emit(AuthError(failure.message)),
       (user) => emit(AuthAuthenticated(user)),
     );
   }
 
-  Future<void> register(
-      {required String email, required String password}) async {
+  Future<void> register({
+    required String email,
+    required String password,
+    String? fullName,
+  }) async {
     emit(const AuthLoading());
     final result = await registerUseCase(
-        RegisterParams(email: email, password: password));
+        RegisterParams(email: email, password: password, fullName: fullName));
     result.fold(
       (failure) => emit(AuthError(failure.message)),
       (user) => emit(AuthAuthenticated(user)),
@@ -58,5 +70,81 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) => emit(AuthError(failure.message)),
       (_) => emit(const AuthUnauthenticated()),
     );
+  }
+
+  Future<void> loginWithGoogle() async {
+    emit(const AuthLoading());
+
+    // Suscripción en el cubit (capa de presentación) — no en el datasource.
+    // Se activa cuando supabase_flutter procesa el deep link de vuelta.
+    _googleAuthSub?.cancel();
+    _googleAuthSub = supabase.Supabase.instance.client.auth.onAuthStateChange
+        .listen((data) {
+      if (data.session != null && !isClosed && state is AuthLoading) {
+        _googleAuthSub?.cancel();
+        _googleAuthSub = null;
+        final u = data.session!.user;
+        emit(AuthAuthenticated(UserEntity(
+          id: u.id,
+          email: u.email ?? '',
+          nombre: u.userMetadata?['full_name'] as String?,
+        )));
+      }
+    });
+
+    final result = await authRepository.loginWithGoogle();
+    if (isClosed) {
+      _googleAuthSub?.cancel();
+      return;
+    }
+
+    result.fold(
+      (failure) {
+        _googleAuthSub?.cancel();
+        _googleAuthSub = null;
+        emit(AuthError(failure.message));
+      },
+      (_) {
+        // Browser abierto — _googleAuthSub maneja el resultado
+      },
+    );
+  }
+
+  Future<void> forgotPassword({required String email}) async {
+    emit(const AuthLoading());
+    final result = await authRepository.forgotPassword(email: email);
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (_) => emit(const AuthPasswordResetEmailSent()),
+    );
+  }
+
+  Future<void> verifyResetOtp({
+    required String email,
+    required String token,
+  }) async {
+    emit(const AuthLoading());
+    final result =
+        await authRepository.verifyResetOtp(email: email, token: token);
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (_) => emit(const AuthOtpVerified()),
+    );
+  }
+
+  Future<void> resetPassword({required String newPassword}) async {
+    emit(const AuthLoading());
+    final result =
+        await authRepository.resetPassword(newPassword: newPassword);
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (_) => emit(const AuthPasswordResetSuccess()),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _googleAuthSub?.cancel();
+    return super.close();
   }
 }

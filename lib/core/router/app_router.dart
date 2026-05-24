@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../utils/exit_dialog.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/auth/presentation/cubit/auth_state.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../injection_container.dart';
 import 'route_names.dart';
 
@@ -29,24 +33,30 @@ class _TempHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is AuthUnauthenticated) {
-          context.go(RouteNames.login);
-        }
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) showExitConfirmDialog(context);
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              tooltip: 'Cerrar sesión',
-              onPressed: () => context.read<AuthCubit>().logout(),
-            ),
-          ],
+      child: BlocListener<AuthCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthUnauthenticated) {
+            context.go(RouteNames.login);
+          }
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Home'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                tooltip: 'Cerrar sesión',
+                onPressed: () => context.read<AuthCubit>().logout(),
+              ),
+            ],
+          ),
+          body: const Center(child: Text('Home — próximamente')),
         ),
-        body: const Center(child: Text('Home — próximamente')),
       ),
     );
   }
@@ -76,6 +86,27 @@ class AppRouter {
         builder: (_, __) => BlocProvider(
           create: (_) => sl<AuthCubit>(),
           child: const RegisterPage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.forgotPassword,
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const ForgotPasswordPage(),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.verifyOtp,
+        builder: (_, state) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: VerifyOtpPage(email: state.extra as String),
+        ),
+      ),
+      GoRoute(
+        path: RouteNames.resetPassword,
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const ResetPasswordPage(),
         ),
       ),
       GoRoute(

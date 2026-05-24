@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/exit_dialog.dart';
 import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
@@ -37,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
@@ -50,22 +53,45 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
       },
-      child: Scaffold(
-        body: SafeArea(
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) showExitConfirmDialog(context);
+        },
+        child: Scaffold(
+          body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 48),
-                  Text('Bienvenido',
-                      style: Theme.of(context).textTheme.displayMedium),
+                  const SizedBox(height: 64),
+                  // Logo
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      color: AppColors.onPrimaryContainer,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const Icon(
+                      Icons.location_on,
+                      size: 40,
+                      color: AppColors.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text('Cubamap', style: theme.textTheme.displayMedium),
                   const SizedBox(height: 8),
-                  Text('Inicia sesión para continuar',
-                      style: Theme.of(context).textTheme.bodyMedium),
-                  const SizedBox(height: 40),
+                  Text(
+                    'El mapa de negocios de Cuba',
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 48),
+                  // Email
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -82,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   const SizedBox(height: 16),
+                  // Contraseña
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
@@ -102,7 +129,17 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 8),
+                  // Olvidaste contraseña
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () => context.push(RouteNames.forgotPassword),
+                      child: const Text('¿Olvidaste tu contraseña?'),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Botón iniciar sesión
                   BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
                       return ElevatedButton(
@@ -118,17 +155,65 @@ class _LoginPageState extends State<LoginPage> {
                       );
                     },
                   ),
-                  const SizedBox(height: 16),
-                  Center(
-                    child: TextButton(
-                      onPressed: () => context.go(RouteNames.register),
-                      child: const Text('¿No tienes cuenta? Regístrate'),
-                    ),
+                  const SizedBox(height: 24),
+                  // Divider
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Text(
+                          'o continúa con',
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
                   ),
+                  const SizedBox(height: 24),
+                  // Google
+                  BlocBuilder<AuthCubit, AuthState>(
+                    builder: (context, state) {
+                      return OutlinedButton(
+                        onPressed: state is AuthLoading
+                            ? null
+                            : () => context.read<AuthCubit>().loginWithGoogle(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.google,
+                              size: 18,
+                              color: state is AuthLoading
+                                  ? null
+                                  : const Color(0xFF4285F4),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text('Continuar con Google'),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 32),
+                  // Registro
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('¿No tienes cuenta?',
+                          style: theme.textTheme.bodyMedium),
+                      TextButton(
+                        onPressed: () => context.push(RouteNames.register),
+                        child: const Text('Regístrate'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),
           ),
+        ),
         ),
       ),
     );

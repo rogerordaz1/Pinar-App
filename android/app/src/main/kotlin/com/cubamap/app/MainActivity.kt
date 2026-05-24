@@ -1,4 +1,4 @@
-package com.pinarapp.pinar_app
+package com.cubamap.app
 
 import io.flutter.embedding.android.FlutterActivity
 

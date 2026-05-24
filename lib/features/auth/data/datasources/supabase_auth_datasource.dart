@@ -21,7 +21,6 @@ class SupabaseAuthDataSource implements AuthDataSource {
       if (response.user == null) {
         throw const app.AuthException('Login fallido');
       }
-      // Si public.users aún no existe o el perfil no fue creado, usamos datos del auth user
       try {
         return await _fetchUserProfile(response.user!.id);
       } catch (_) {
@@ -38,21 +37,25 @@ class SupabaseAuthDataSource implements AuthDataSource {
   Future<UserModel> register({
     required String email,
     required String password,
+    String? fullName,
   }) async {
     try {
       final response = await client.auth.signUp(
         email: email,
         password: password,
+        data: fullName != null ? {'nombre': fullName} : null,
       );
       if (response.user == null) {
         throw const app.AuthException('Registro fallido');
       }
-      // El trigger crea el perfil en public.users; lo buscamos
       try {
         return await _fetchUserProfile(response.user!.id);
       } catch (_) {
-        // Perfil aún no creado por el trigger — devolvemos mínimo
-        return UserModel(id: response.user!.id, email: email);
+        return UserModel(
+          id: response.user!.id,
+          email: email,
+          nombre: fullName,
+        );
       }
     } on app.AuthException {
       rethrow;
@@ -77,8 +80,53 @@ class SupabaseAuthDataSource implements AuthDataSource {
     try {
       return await _fetchUserProfile(authUser.id);
     } catch (_) {
-      // Perfil no encontrado — devolvemos mínimo desde el auth user
       return UserModel(id: authUser.id, email: authUser.email ?? '');
+    }
+  }
+
+  @override
+  Future<void> loginWithGoogle() async {
+    try {
+      await client.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: 'com.cubamap.app://login-callback',
+      );
+    } catch (e) {
+      throw app.AuthException(_extractMessage(e));
+    }
+  }
+
+  @override
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      await client.auth.resetPasswordForEmail(email);
+    } catch (e) {
+      throw app.AuthException(_extractMessage(e));
+    }
+  }
+
+  @override
+  Future<void> verifyResetOtp({
+    required String email,
+    required String token,
+  }) async {
+    try {
+      await client.auth.verifyOTP(
+        email: email,
+        token: token,
+        type: OtpType.recovery,
+      );
+    } catch (e) {
+      throw app.AuthException(_extractMessage(e));
+    }
+  }
+
+  @override
+  Future<void> resetPassword({required String newPassword}) async {
+    try {
+      await client.auth.updateUser(UserAttributes(password: newPassword));
+    } catch (e) {
+      throw app.AuthException(_extractMessage(e));
     }
   }
 
@@ -88,7 +136,7 @@ class SupabaseAuthDataSource implements AuthDataSource {
         .select()
         .eq('id', userId)
         .single();
-    return UserModel.fromMap(data as Map<String, dynamic>);
+    return UserModel.fromMap(data);
   }
 
   String _extractMessage(Object e) =>

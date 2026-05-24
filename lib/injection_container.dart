@@ -35,6 +35,7 @@ Future<void> _registerAuth() async {
       registerUseCase: sl(),
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
+      authRepository: sl(),
     ),
   );
 

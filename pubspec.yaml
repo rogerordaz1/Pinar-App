@@ -1,4 +1,4 @@
-name: pinar_app
+name: cubamap
 description: Encuentra productos disponibles en negocios cercanos en Cuba.
 publish_to: 'none'
 version: 0.1.0+1
@@ -46,6 +46,8 @@ dependencies:
   # Mapas (preparado para v1.1)
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+
+  font_awesome_flutter: ^11.0.0
 
   cupertino_icons: ^1.0.6
 
