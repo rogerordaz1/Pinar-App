@@ -107,6 +107,8 @@ class MockHomeDataSource implements HomeDataSource {
           unidad: 'cajita',
           negocioNombre: 'Agro San Cristóbal',
           negocioId: '2',
+          imagenUrl:
+              'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=300&h=300&fit=crop&auto=format',
         ),
         ProductoPopularModel(
           id: 'prod-2',
@@ -115,6 +117,8 @@ class MockHomeDataSource implements HomeDataSource {
           unidad: 'unidad',
           negocioNombre: 'La Panadería Elena',
           negocioId: '1',
+          imagenUrl:
+              'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=300&h=300&fit=crop&auto=format',
         ),
         ProductoPopularModel(
           id: 'prod-3',
@@ -123,6 +127,8 @@ class MockHomeDataSource implements HomeDataSource {
           unidad: 'botella',
           negocioNombre: 'Tienda La Esquina',
           negocioId: '5',
+          imagenUrl:
+              'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300&h=300&fit=crop&auto=format',
         ),
         ProductoPopularModel(
           id: 'prod-4',
@@ -131,6 +137,8 @@ class MockHomeDataSource implements HomeDataSource {
           unidad: 'libra',
           negocioNombre: 'Agro San Cristóbal',
           negocioId: '2',
+          imagenUrl:
+              'https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=300&h=300&fit=crop&auto=format',
         ),
         ProductoPopularModel(
           id: 'prod-5',
@@ -139,6 +147,8 @@ class MockHomeDataSource implements HomeDataSource {
           unidad: 'libra',
           negocioNombre: 'Tienda La Esquina',
           negocioId: '5',
+          imagenUrl:
+              'https://images.unsplash.com/photo-1536304993881-ff86e0c9ef1d?w=300&h=300&fit=crop&auto=format',
         ),
         ProductoPopularModel(
           id: 'prod-6',
@@ -147,6 +157,8 @@ class MockHomeDataSource implements HomeDataSource {
           unidad: 'tableta',
           negocioNombre: 'Farmacia Vida',
           negocioId: '3',
+          imagenUrl:
+              'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300&h=300&fit=crop&auto=format',
         ),
       ];
 }

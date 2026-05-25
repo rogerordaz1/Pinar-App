@@ -32,7 +32,7 @@ class CategoryChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 72,
+        width: 68,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -41,11 +41,11 @@ class CategoryChip extends StatelessWidget {
               height: 56,
               decoration: BoxDecoration(
                 color: AppColors.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(16),
+                shape: BoxShape.circle,
               ),
               child: Icon(_icon(), color: AppColors.primary, size: 26),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             Text(
               categoria.nombre,
               style: AppTextStyles.caption,

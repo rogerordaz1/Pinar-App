@@ -8,6 +8,7 @@ class ProductoPopularModel {
   final String negocioNombre;
   final String negocioId;
   final bool disponible;
+  final String? imagenUrl;
 
   const ProductoPopularModel({
     required this.id,
@@ -17,6 +18,7 @@ class ProductoPopularModel {
     required this.negocioNombre,
     required this.negocioId,
     this.disponible = true,
+    this.imagenUrl,
   });
 
   factory ProductoPopularModel.fromMap(Map<String, dynamic> map) {
@@ -28,6 +30,7 @@ class ProductoPopularModel {
       negocioNombre: map['negocio_nombre'] as String,
       negocioId: map['negocio_id'] as String,
       disponible: map['disponible'] as bool? ?? true,
+      imagenUrl: map['imagen_url'] as String?,
     );
   }
 
@@ -39,5 +42,6 @@ class ProductoPopularModel {
         negocioNombre: negocioNombre,
         negocioId: negocioId,
         disponible: disponible,
+        imagenUrl: imagenUrl,
       );
 }

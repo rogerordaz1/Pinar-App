@@ -8,6 +8,7 @@ class ProductoPopular extends Equatable {
   final String negocioNombre;
   final String negocioId;
   final bool disponible;
+  final String? imagenUrl;
 
   const ProductoPopular({
     required this.id,
@@ -17,9 +18,10 @@ class ProductoPopular extends Equatable {
     required this.negocioNombre,
     required this.negocioId,
     this.disponible = true,
+    this.imagenUrl,
   });
 
   @override
   List<Object?> get props =>
-      [id, nombre, precio, unidad, negocioNombre, negocioId, disponible];
+      [id, nombre, precio, unidad, negocioNombre, negocioId, disponible, imagenUrl];
 }
