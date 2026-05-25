@@ -23,9 +23,7 @@ class MainShell extends StatelessWidget {
         canPop: false,
         onPopInvokedWithResult: (didPop, _) {
           if (!didPop) {
-            if (context.canPop()) {
-              context.pop();
-            } else if (navigationShell.currentIndex != 0) {
+            if (navigationShell.currentIndex != 0) {
               navigationShell.goBranch(0, initialLocation: true);
             } else {
               showExitConfirmDialog(context);
