@@ -15,6 +15,8 @@ class MockHomeDataSource implements HomeDataSource {
           abierto: true,
           verificado: true,
           calificacion: 4.9,
+          logoUrl:
+              'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=200&fit=crop&auto=format',
         ),
         NegocioPreviewModel(
           id: '2',
@@ -23,6 +25,8 @@ class MockHomeDataSource implements HomeDataSource {
           distanciaKm: 0.8,
           abierto: false,
           calificacion: 4.5,
+          logoUrl:
+              'https://images.unsplash.com/photo-1500651230702-0e2d8a49d4ad?w=400&h=200&fit=crop&auto=format',
         ),
         NegocioPreviewModel(
           id: '3',
@@ -32,6 +36,8 @@ class MockHomeDataSource implements HomeDataSource {
           abierto: true,
           verificado: true,
           calificacion: 4.8,
+          logoUrl:
+              'https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400&h=200&fit=crop&auto=format',
         ),
         NegocioPreviewModel(
           id: '4',
@@ -40,6 +46,8 @@ class MockHomeDataSource implements HomeDataSource {
           distanciaKm: 1.5,
           abierto: true,
           calificacion: 4.7,
+          logoUrl:
+              'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=200&fit=crop&auto=format',
         ),
         NegocioPreviewModel(
           id: '5',
@@ -48,6 +56,8 @@ class MockHomeDataSource implements HomeDataSource {
           distanciaKm: 2.0,
           abierto: true,
           calificacion: 4.3,
+          logoUrl:
+              'https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=400&h=200&fit=crop&auto=format',
         ),
         NegocioPreviewModel(
           id: '6',
@@ -56,6 +66,8 @@ class MockHomeDataSource implements HomeDataSource {
           distanciaKm: 2.3,
           abierto: false,
           calificacion: 4.6,
+          logoUrl:
+              'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=200&fit=crop&auto=format',
         ),
       ];
 

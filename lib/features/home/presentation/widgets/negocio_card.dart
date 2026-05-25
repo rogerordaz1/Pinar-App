@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -46,12 +47,7 @@ class NegocioCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 72,
-              width: double.infinity,
-              color: color.withOpacity(0.15),
-              child: Icon(_icon(), color: color, size: 36),
-            ),
+            _buildHeader(color),
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
               child: Column(
@@ -70,7 +66,8 @@ class NegocioCard extends StatelessWidget {
                       ),
                       if (negocio.verificado) ...[
                         const SizedBox(width: 4),
-                        Icon(Icons.verified, size: 15, color: AppColors.secondary),
+                        Icon(Icons.verified,
+                            size: 15, color: AppColors.secondary),
                       ],
                     ],
                   ),
@@ -123,6 +120,29 @@ class NegocioCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildHeader(Color color) {
+    if (negocio.logoUrl != null) {
+      return CachedNetworkImage(
+        imageUrl: negocio.logoUrl!,
+        height: 120,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        placeholder: (_, __) => _colorPlaceholder(color),
+        errorWidget: (_, __, ___) => _colorPlaceholder(color),
+      );
+    }
+    return _colorPlaceholder(color);
+  }
+
+  Widget _colorPlaceholder(Color color) {
+    return Container(
+      height: 120,
+      width: double.infinity,
+      color: color.withOpacity(0.15),
+      child: Icon(_icon(), color: color, size: 40),
     );
   }
 }
