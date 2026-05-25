@@ -22,7 +22,13 @@ class MainShell extends StatelessWidget {
       child: PopScope(
         canPop: false,
         onPopInvokedWithResult: (didPop, _) {
-          if (!didPop) showExitConfirmDialog(context);
+          if (!didPop) {
+            if (context.canPop()) {
+              context.pop();
+            } else {
+              showExitConfirmDialog(context);
+            }
+          }
         },
         child: Scaffold(
           body: navigationShell,

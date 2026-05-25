@@ -66,8 +66,10 @@ class _HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        slivers: [
         const SliverToBoxAdapter(child: HomeHeader()),
         const SliverToBoxAdapter(child: SearchBarTap()),
         SliverToBoxAdapter(
@@ -89,7 +91,8 @@ class _HomeContent extends StatelessWidget {
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: 24)),
-      ],
+        ],
+      ),
     );
   }
 }
