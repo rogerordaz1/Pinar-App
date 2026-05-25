@@ -9,6 +9,14 @@ import 'features/auth/domain/usecases/login_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/register_usecase.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/home/data/datasources/home_datasource.dart';
+import 'features/home/data/datasources/mock_home_datasource.dart';
+import 'features/home/data/repositories/home_repository_impl.dart';
+import 'features/home/domain/repositories/home_repository.dart';
+import 'features/home/domain/usecases/get_categorias_usecase.dart';
+import 'features/home/domain/usecases/get_negocios_cercanos_usecase.dart';
+import 'features/home/domain/usecases/get_promociones_usecase.dart';
+import 'features/home/presentation/cubit/home_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -25,6 +33,7 @@ void _registerExternal() {
 
 Future<void> _registerFeatures() async {
   await _registerAuth();
+  _registerHome();
 }
 
 Future<void> _registerAuth() async {
@@ -53,5 +62,31 @@ Future<void> _registerAuth() async {
   // Data source
   sl.registerLazySingleton<AuthDataSource>(
     () => SupabaseAuthDataSource(sl()),
+  );
+}
+
+void _registerHome() {
+  // Cubit
+  sl.registerFactory(
+    () => HomeCubit(
+      getNegociosCercanosUseCase: sl(),
+      getCategoriasUseCase: sl(),
+      getPromocionesUseCase: sl(),
+    ),
+  );
+
+  // Use cases
+  sl.registerLazySingleton(() => GetNegociosCercanosUseCase(sl()));
+  sl.registerLazySingleton(() => GetCategoriasUseCase(sl()));
+  sl.registerLazySingleton(() => GetPromocionesUseCase(sl()));
+
+  // Repository
+  sl.registerLazySingleton<HomeRepository>(
+    () => HomeRepositoryImpl(sl()),
+  );
+
+  // Data source — swap MockHomeDataSource → SupabaseHomeDataSource cuando esté listo
+  sl.registerLazySingleton<HomeDataSource>(
+    () => MockHomeDataSource(),
   );
 }
