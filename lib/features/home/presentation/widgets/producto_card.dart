@@ -32,7 +32,7 @@ class ProductoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.go('/negocio/${producto.negocioId}'),
+      onTap: () => context.push('/negocio/${producto.negocioId}'),
       child: Container(
         width: 140,
         decoration: BoxDecoration(

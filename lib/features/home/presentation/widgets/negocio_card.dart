@@ -42,7 +42,7 @@ class NegocioCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => context.go('/negocio/${negocio.id}'),
+        onTap: () => context.push('/negocio/${negocio.id}'),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

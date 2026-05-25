@@ -196,7 +196,7 @@ class _PromoSectionState extends State<_PromoSection> {
               child: PromoBanner(
                 promocion: widget.promociones[index],
                 onTap: () =>
-                    context.go('/negocio/${widget.promociones[index].negocioId}'),
+                    context.push('/negocio/${widget.promociones[index].negocioId}'),
               ),
             ),
           ),
