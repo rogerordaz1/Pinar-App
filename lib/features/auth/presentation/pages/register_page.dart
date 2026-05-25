@@ -279,7 +279,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       Text('¿Ya tienes cuenta?',
                           style: theme.textTheme.bodyMedium),
                       TextButton(
-                        onPressed: () => context.go(RouteNames.login),
+                        onPressed: () => context.pop(),
                         child: const Text('Inicia sesión'),
                       ),
                     ],
