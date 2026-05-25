@@ -3,9 +3,11 @@ import '../../../../core/errors/failures.dart';
 import '../entities/negocio_preview.dart';
 import '../entities/categoria_negocio.dart';
 import '../entities/promocion.dart';
+import '../entities/producto_popular.dart';
 
 abstract class HomeRepository {
   Future<Either<Failure, List<NegocioPreview>>> getNegociosCercanos();
   Future<Either<Failure, List<CategoriaNegocio>>> getCategorias();
   Future<Either<Failure, List<Promocion>>> getPromociones();
+  Future<Either<Failure, List<ProductoPopular>>> getProductosPopulares();
 }

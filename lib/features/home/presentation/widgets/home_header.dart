@@ -6,7 +6,9 @@ import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final int tiendasAbiertas;
+
+  const HomeHeader({super.key, this.tiendasAbiertas = 0});
 
   String _greeting() {
     final hour = DateTime.now().hour;
@@ -40,10 +42,14 @@ class HomeHeader extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    Icon(Icons.location_on,
-                        size: 14, color: AppColors.primary),
+                    Icon(Icons.location_on, size: 14, color: AppColors.primary),
                     const SizedBox(width: 4),
-                    Text('Pinar del Río', style: AppTextStyles.bodySmall),
+                    Text(
+                      tiendasAbiertas > 0
+                          ? '$tiendasAbiertas tiendas abiertas ahora'
+                          : 'Pinar del Río',
+                      style: AppTextStyles.bodySmall,
+                    ),
                   ],
                 ),
               ],

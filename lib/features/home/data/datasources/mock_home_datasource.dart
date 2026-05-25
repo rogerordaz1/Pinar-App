@@ -2,6 +2,7 @@ import 'home_datasource.dart';
 import '../models/negocio_preview_model.dart';
 import '../models/categoria_negocio_model.dart';
 import '../models/promocion_model.dart';
+import '../models/producto_popular_model.dart';
 
 class MockHomeDataSource implements HomeDataSource {
   @override
@@ -13,6 +14,7 @@ class MockHomeDataSource implements HomeDataSource {
           distanciaKm: 0.3,
           abierto: true,
           verificado: true,
+          calificacion: 4.9,
         ),
         NegocioPreviewModel(
           id: '2',
@@ -20,6 +22,7 @@ class MockHomeDataSource implements HomeDataSource {
           categoria: 'Agropecuario',
           distanciaKm: 0.8,
           abierto: false,
+          calificacion: 4.5,
         ),
         NegocioPreviewModel(
           id: '3',
@@ -28,6 +31,7 @@ class MockHomeDataSource implements HomeDataSource {
           distanciaKm: 1.2,
           abierto: true,
           verificado: true,
+          calificacion: 4.8,
         ),
         NegocioPreviewModel(
           id: '4',
@@ -35,6 +39,7 @@ class MockHomeDataSource implements HomeDataSource {
           categoria: 'Cafetería',
           distanciaKm: 1.5,
           abierto: true,
+          calificacion: 4.7,
         ),
         NegocioPreviewModel(
           id: '5',
@@ -42,6 +47,7 @@ class MockHomeDataSource implements HomeDataSource {
           categoria: 'Tienda',
           distanciaKm: 2.0,
           abierto: true,
+          calificacion: 4.3,
         ),
         NegocioPreviewModel(
           id: '6',
@@ -49,6 +55,7 @@ class MockHomeDataSource implements HomeDataSource {
           categoria: 'Ferretería',
           distanciaKm: 2.3,
           abierto: false,
+          calificacion: 4.6,
         ),
       ];
 
@@ -87,6 +94,58 @@ class MockHomeDataSource implements HomeDataSource {
           id: 'promo-3',
           titulo: 'Medicamentos disponibles',
           nombreNegocio: 'Farmacia Vida',
+          negocioId: '3',
+        ),
+      ];
+
+  @override
+  Future<List<ProductoPopularModel>> getProductosPopulares() async => const [
+        ProductoPopularModel(
+          id: 'prod-1',
+          nombre: 'Huevos',
+          precio: 350,
+          unidad: 'cajita',
+          negocioNombre: 'Agro San Cristóbal',
+          negocioId: '2',
+        ),
+        ProductoPopularModel(
+          id: 'prod-2',
+          nombre: 'Pan Criollo',
+          precio: 25,
+          unidad: 'unidad',
+          negocioNombre: 'La Panadería Elena',
+          negocioId: '1',
+        ),
+        ProductoPopularModel(
+          id: 'prod-3',
+          nombre: 'Aceite Vegetal',
+          precio: 620,
+          unidad: 'botella',
+          negocioNombre: 'Tienda La Esquina',
+          negocioId: '5',
+        ),
+        ProductoPopularModel(
+          id: 'prod-4',
+          nombre: 'Pollo',
+          precio: 890,
+          unidad: 'libra',
+          negocioNombre: 'Agro San Cristóbal',
+          negocioId: '2',
+        ),
+        ProductoPopularModel(
+          id: 'prod-5',
+          nombre: 'Arroz',
+          precio: 180,
+          unidad: 'libra',
+          negocioNombre: 'Tienda La Esquina',
+          negocioId: '5',
+        ),
+        ProductoPopularModel(
+          id: 'prod-6',
+          nombre: 'Aspirina 500mg',
+          precio: 45,
+          unidad: 'tableta',
+          negocioNombre: 'Farmacia Vida',
           negocioId: '3',
         ),
       ];

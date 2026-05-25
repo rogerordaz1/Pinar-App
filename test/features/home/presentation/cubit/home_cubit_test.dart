@@ -8,9 +8,11 @@ import 'package:cubamap/core/usecases/usecase.dart';
 import 'package:cubamap/features/home/domain/entities/categoria_negocio.dart';
 import 'package:cubamap/features/home/domain/entities/negocio_preview.dart';
 import 'package:cubamap/features/home/domain/entities/promocion.dart';
+import 'package:cubamap/features/home/domain/entities/producto_popular.dart';
 import 'package:cubamap/features/home/domain/usecases/get_categorias_usecase.dart';
 import 'package:cubamap/features/home/domain/usecases/get_negocios_cercanos_usecase.dart';
 import 'package:cubamap/features/home/domain/usecases/get_promociones_usecase.dart';
+import 'package:cubamap/features/home/domain/usecases/get_productos_populares_usecase.dart';
 import 'package:cubamap/features/home/presentation/cubit/home_cubit.dart';
 import 'package:cubamap/features/home/presentation/cubit/home_state.dart';
 
@@ -21,11 +23,15 @@ class MockGetCategoriasUseCase extends Mock implements GetCategoriasUseCase {}
 
 class MockGetPromocionesUseCase extends Mock implements GetPromocionesUseCase {}
 
+class MockGetProductosPopularesUseCase extends Mock
+    implements GetProductosPopularesUseCase {}
+
 void main() {
   late HomeCubit cubit;
   late MockGetNegociosCercanosUseCase mockGetNegocios;
   late MockGetCategoriasUseCase mockGetCategorias;
   late MockGetPromocionesUseCase mockGetPromociones;
+  late MockGetProductosPopularesUseCase mockGetProductos;
 
   const tNegocios = [
     NegocioPreview(
@@ -47,6 +53,16 @@ void main() {
       negocioId: '1',
     ),
   ];
+  const tProductos = [
+    ProductoPopular(
+      id: 'prod-1',
+      nombre: 'Pan',
+      precio: 25,
+      unidad: 'unidad',
+      negocioNombre: 'Test Negocio',
+      negocioId: '1',
+    ),
+  ];
 
   setUpAll(() {
     registerFallbackValue(const NoParams());
@@ -56,10 +72,12 @@ void main() {
     mockGetNegocios = MockGetNegociosCercanosUseCase();
     mockGetCategorias = MockGetCategoriasUseCase();
     mockGetPromociones = MockGetPromocionesUseCase();
+    mockGetProductos = MockGetProductosPopularesUseCase();
     cubit = HomeCubit(
       getNegociosCercanosUseCase: mockGetNegocios,
       getCategoriasUseCase: mockGetCategorias,
       getPromocionesUseCase: mockGetPromociones,
+      getProductosPopularesUseCase: mockGetProductos,
     );
   });
 
@@ -79,6 +97,8 @@ void main() {
             .thenAnswer((_) async => const Right(tCategorias));
         when(() => mockGetPromociones(any()))
             .thenAnswer((_) async => const Right(tPromociones));
+        when(() => mockGetProductos(any()))
+            .thenAnswer((_) async => const Right(tProductos));
         return cubit;
       },
       act: (cubit) => cubit.loadHome(),
@@ -88,6 +108,7 @@ void main() {
           negocios: tNegocios,
           categorias: tCategorias,
           promociones: tPromociones,
+          productos: tProductos,
         ),
       ],
     );
@@ -101,6 +122,8 @@ void main() {
             .thenAnswer((_) async => const Right(tCategorias));
         when(() => mockGetPromociones(any()))
             .thenAnswer((_) async => const Right(tPromociones));
+        when(() => mockGetProductos(any()))
+            .thenAnswer((_) async => const Right(tProductos));
         return cubit;
       },
       act: (cubit) => cubit.loadHome(),
@@ -119,6 +142,8 @@ void main() {
             (_) async => const Left(ServerFailure('Error categorías')));
         when(() => mockGetPromociones(any()))
             .thenAnswer((_) async => const Right(tPromociones));
+        when(() => mockGetProductos(any()))
+            .thenAnswer((_) async => const Right(tProductos));
         return cubit;
       },
       act: (cubit) => cubit.loadHome(),

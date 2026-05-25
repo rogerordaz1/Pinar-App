@@ -8,6 +8,7 @@ class NegocioPreview extends Equatable {
   final bool abierto;
   final String? logoUrl;
   final bool verificado;
+  final double calificacion;
 
   const NegocioPreview({
     required this.id,
@@ -17,9 +18,10 @@ class NegocioPreview extends Equatable {
     required this.abierto,
     this.logoUrl,
     this.verificado = false,
+    this.calificacion = 0.0,
   });
 
   @override
   List<Object?> get props =>
-      [id, nombre, categoria, distanciaKm, abierto, logoUrl, verificado];
+      [id, nombre, categoria, distanciaKm, abierto, logoUrl, verificado, calificacion];
 }

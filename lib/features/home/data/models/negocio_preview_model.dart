@@ -8,6 +8,7 @@ class NegocioPreviewModel {
   final bool abierto;
   final String? logoUrl;
   final bool verificado;
+  final double calificacion;
 
   const NegocioPreviewModel({
     required this.id,
@@ -17,6 +18,7 @@ class NegocioPreviewModel {
     required this.abierto,
     this.logoUrl,
     this.verificado = false,
+    this.calificacion = 0.0,
   });
 
   factory NegocioPreviewModel.fromMap(Map<String, dynamic> map) {
@@ -28,6 +30,7 @@ class NegocioPreviewModel {
       abierto: map['abierto'] as bool,
       logoUrl: map['logo_url'] as String?,
       verificado: map['verificado'] as bool? ?? false,
+      calificacion: (map['calificacion'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -39,5 +42,6 @@ class NegocioPreviewModel {
         abierto: abierto,
         logoUrl: logoUrl,
         verificado: verificado,
+        calificacion: calificacion,
       );
 }

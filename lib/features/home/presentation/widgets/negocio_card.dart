@@ -9,82 +9,118 @@ class NegocioCard extends StatelessWidget {
 
   const NegocioCard({super.key, required this.negocio});
 
+  Color _headerColor() {
+    return switch (negocio.categoria) {
+      'Panadería' => const Color(0xFFF59E0B),
+      'Cafetería' => const Color(0xFF6F4E37),
+      'Farmacia' => const Color(0xFF0D9488),
+      'Agropecuario' => const Color(0xFF16A34A),
+      'Restaurante' => const Color(0xFFDC2626),
+      'Tienda' => const Color(0xFF7C3AED),
+      'Ferretería' => const Color(0xFF92400E),
+      _ => AppColors.primary,
+    };
+  }
+
+  IconData _icon() {
+    return switch (negocio.categoria) {
+      'Panadería' => Icons.bakery_dining,
+      'Cafetería' => Icons.coffee,
+      'Farmacia' => Icons.local_pharmacy,
+      'Agropecuario' => Icons.grass,
+      'Restaurante' => Icons.restaurant,
+      'Tienda' => Icons.store,
+      'Ferretería' => Icons.hardware,
+      _ => Icons.store_outlined,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
+    final color = _headerColor();
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
         onTap: () => context.go('/negocio/${negocio.id}'),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceContainerHigh,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.store_outlined,
-                    color: AppColors.onSurfaceVariant),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            negocio.nombre,
-                            style: AppTextStyles.body,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 72,
+              width: double.infinity,
+              color: color.withOpacity(0.15),
+              child: Icon(_icon(), color: color, size: 36),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          negocio.nombre,
+                          style: AppTextStyles.body
+                              .copyWith(fontWeight: FontWeight.w600),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      if (negocio.verificado) ...[
+                        const SizedBox(width: 4),
+                        Icon(Icons.verified, size: 15, color: AppColors.secondary),
+                      ],
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      if (negocio.calificacion > 0) ...[
+                        Icon(Icons.star_rounded,
+                            size: 14, color: AppColors.warning),
+                        const SizedBox(width: 2),
+                        Text(
+                          negocio.calificacion.toStringAsFixed(1),
+                          style: AppTextStyles.caption.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.onSurface,
                           ),
                         ),
-                        if (negocio.verificado) ...[
-                          const SizedBox(width: 4),
-                          Icon(Icons.verified,
-                              size: 15, color: AppColors.secondary),
-                        ],
+                        const SizedBox(width: 8),
                       ],
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${negocio.categoria} · ${negocio.distanciaKm.toStringAsFixed(1)} km',
-                      style: AppTextStyles.caption,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: negocio.abierto
-                      ? AppColors.success.withOpacity(0.12)
-                      : AppColors.error.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  negocio.abierto ? 'Abierto' : 'Cerrado',
-                  style: AppTextStyles.caption.copyWith(
-                    color: negocio.abierto
-                        ? AppColors.success
-                        : AppColors.error,
-                    fontWeight: FontWeight.w600,
+                      Expanded(
+                        child: Text(
+                          '${negocio.categoria} · ${negocio.distanciaKm.toStringAsFixed(1)} km',
+                          style: AppTextStyles.caption,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: negocio.abierto
+                              ? AppColors.success.withOpacity(0.12)
+                              : AppColors.error.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          negocio.abierto ? 'Abierto' : 'Cerrado',
+                          style: AppTextStyles.caption.copyWith(
+                            color: negocio.abierto
+                                ? AppColors.success
+                                : AppColors.error,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                ],
               ),
-              const SizedBox(width: 4),
-              const Icon(Icons.chevron_right,
-                  color: AppColors.onSurfaceVariant, size: 20),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

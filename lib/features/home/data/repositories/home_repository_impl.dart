@@ -3,6 +3,7 @@ import '../../../../core/errors/failures.dart';
 import '../../domain/entities/negocio_preview.dart';
 import '../../domain/entities/categoria_negocio.dart';
 import '../../domain/entities/promocion.dart';
+import '../../domain/entities/producto_popular.dart';
 import '../../domain/repositories/home_repository.dart';
 import '../datasources/home_datasource.dart';
 
@@ -35,6 +36,16 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<Either<Failure, List<Promocion>>> getPromociones() async {
     try {
       final models = await dataSource.getPromociones();
+      return Right(models.map((m) => m.toEntity()).toList());
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProductoPopular>>> getProductosPopulares() async {
+    try {
+      final models = await dataSource.getProductosPopulares();
       return Right(models.map((m) => m.toEntity()).toList());
     } catch (e) {
       return Left(ServerFailure(e.toString()));

@@ -16,6 +16,7 @@ import 'features/home/domain/repositories/home_repository.dart';
 import 'features/home/domain/usecases/get_categorias_usecase.dart';
 import 'features/home/domain/usecases/get_negocios_cercanos_usecase.dart';
 import 'features/home/domain/usecases/get_promociones_usecase.dart';
+import 'features/home/domain/usecases/get_productos_populares_usecase.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
 
 final sl = GetIt.instance;
@@ -72,6 +73,7 @@ void _registerHome() {
       getNegociosCercanosUseCase: sl(),
       getCategoriasUseCase: sl(),
       getPromocionesUseCase: sl(),
+      getProductosPopularesUseCase: sl(),
     ),
   );
 
@@ -79,6 +81,7 @@ void _registerHome() {
   sl.registerLazySingleton(() => GetNegociosCercanosUseCase(sl()));
   sl.registerLazySingleton(() => GetCategoriasUseCase(sl()));
   sl.registerLazySingleton(() => GetPromocionesUseCase(sl()));
+  sl.registerLazySingleton(() => GetProductosPopularesUseCase(sl()));
 
   // Repository
   sl.registerLazySingleton<HomeRepository>(

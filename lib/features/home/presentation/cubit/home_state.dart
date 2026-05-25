@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import '../../domain/entities/negocio_preview.dart';
 import '../../domain/entities/categoria_negocio.dart';
 import '../../domain/entities/promocion.dart';
+import '../../domain/entities/producto_popular.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -23,15 +24,17 @@ class HomeLoaded extends HomeState {
   final List<CategoriaNegocio> categorias;
   final List<Promocion> promociones;
   final List<NegocioPreview> negocios;
+  final List<ProductoPopular> productos;
 
   const HomeLoaded({
     required this.categorias,
     required this.promociones,
     required this.negocios,
+    required this.productos,
   });
 
   @override
-  List<Object> get props => [categorias, promociones, negocios];
+  List<Object> get props => [categorias, promociones, negocios, productos];
 }
 
 class HomeError extends HomeState {
