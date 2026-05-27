@@ -9,6 +9,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
+import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/cubit/home_cubit.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../injection_container.dart';
@@ -132,7 +133,7 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RouteNames.perfil,
-                builder: (_, __) => const _PlaceholderPage('Perfil'),
+                builder: (_, __) => const ProfilePage(),
               ),
             ],
           ),
