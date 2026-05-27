@@ -1,6 +1,6 @@
 // test/core/errors/failures_test.dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pinar_app/core/errors/failures.dart';
+import 'package:cubamap/core/errors/failures.dart';
 
 void main() {
   group('ServerFailure', () {

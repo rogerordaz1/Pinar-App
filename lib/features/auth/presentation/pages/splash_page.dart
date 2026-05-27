@@ -30,14 +30,14 @@ class _SplashPageState extends State<SplashPage> {
           context.go(RouteNames.login);
         }
       },
-      child: Scaffold(
+      child: const Scaffold(
         backgroundColor: AppColors.primary,
-        body: const Center(
+        body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Pinar App',
+                'Cubamap',
                 style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,

@@ -1,0 +1,72 @@
+<h2>¿Cómo se navega en la app?</h2>
+<p class="subtitle">Define la estructura de navegación principal antes de diseñar la búsqueda</p>
+
+<div class="cards">
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;color:#e0e0e0">
+      <div style="background:#16213e;border-radius:6px;padding:12px;margin-bottom:8px">
+        <div style="color:#4fc3f7;font-weight:bold;margin-bottom:8px">🏠 Home / Buscar</div>
+        <div style="background:#0f3460;border-radius:4px;padding:8px;color:#aaa;margin-bottom:6px">🔍 ¿Qué buscas?</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px">
+          <div style="background:#0f3460;border-radius:4px;padding:6px;font-size:10px;text-align:center">🍕 Comida</div>
+          <div style="background:#0f3460;border-radius:4px;padding:6px;font-size:10px;text-align:center">💈 Belleza</div>
+          <div style="background:#0f3460;border-radius:4px;padding:6px;font-size:10px;text-align:center">🏥 Salud</div>
+          <div style="background:#0f3460;border-radius:4px;padding:6px;font-size:10px;text-align:center">🛒 Tiendas</div>
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:#888">📍 Negocios cerca de ti...</div>
+      </div>
+      <div style="display:flex;justify-content:space-around;background:#16213e;border-radius:6px;padding:8px">
+        <span style="color:#4fc3f7;font-size:10px">🏠 Inicio</span>
+        <span style="color:#888;font-size:10px">❤️ Favoritos</span>
+        <span style="color:#888;font-size:10px">👤 Perfil</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Home + Búsqueda integradas</h3>
+      <p>Una sola pantalla principal con barra de búsqueda y categorías. Bottom nav con 3 tabs: Inicio, Favoritos, Perfil.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;color:#e0e0e0">
+      <div style="background:#16213e;border-radius:6px;padding:12px;margin-bottom:8px">
+        <div style="color:#4fc3f7;font-weight:bold;margin-bottom:8px">🏠 Home</div>
+        <div style="font-size:10px;color:#aaa;margin-bottom:6px">Bienvenido, Roger</div>
+        <div style="background:#0f3460;border-radius:4px;padding:8px;margin-bottom:6px;font-size:10px">⭐ Negocios destacados</div>
+        <div style="background:#0f3460;border-radius:4px;padding:8px;font-size:10px">📍 Cerca de ti</div>
+      </div>
+      <div style="display:flex;justify-content:space-around;background:#16213e;border-radius:6px;padding:8px">
+        <span style="color:#4fc3f7;font-size:10px">🏠 Inicio</span>
+        <span style="color:#888;font-size:10px">🔍 Buscar</span>
+        <span style="color:#888;font-size:10px">❤️ Favoritos</span>
+        <span style="color:#888;font-size:10px">👤 Perfil</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Búsqueda como tab separado</h3>
+      <p>Home muestra contenido destacado y cercano. Tab dedicado para búsqueda. Bottom nav con 4 tabs.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1a1a2e;padding:16px;border-radius:8px;font-family:monospace;font-size:12px;color:#e0e0e0">
+      <div style="background:#16213e;border-radius:6px;padding:12px;margin-bottom:8px">
+        <div style="color:#4fc3f7;font-weight:bold;margin-bottom:8px">🗺️ Mapa + Buscar</div>
+        <div style="background:#0f3460;border-radius:4px;padding:8px;color:#aaa;margin-bottom:6px">🔍 Buscar negocios...</div>
+        <div style="background:#1a3a5c;border-radius:4px;height:80px;display:flex;align-items:center;justify-content:center;color:#4fc3f7;font-size:10px">
+          📍 Vista de mapa<br>con pines de negocios
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-around;background:#16213e;border-radius:6px;padding:8px">
+        <span style="color:#4fc3f7;font-size:10px">🗺️ Mapa</span>
+        <span style="color:#888;font-size:10px">≡ Lista</span>
+        <span style="color:#888;font-size:10px">❤️ Favoritos</span>
+        <span style="color:#888;font-size:10px">👤 Perfil</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Mapa como pantalla principal</h3>
+      <p>El mapa es el centro de la app. La búsqueda filtra pines en el mapa. Toggle para ver lista.</p>
+    </div>
+  </div>
+</div>

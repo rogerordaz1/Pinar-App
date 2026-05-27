@@ -1,6 +1,6 @@
-# pinar_app
+# Cubamap
 
-A new Flutter project.
+El mapa de negocios de Cuba.
 
 ## Getting Started
 

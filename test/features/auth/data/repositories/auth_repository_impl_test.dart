@@ -1,12 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pinar_app/core/errors/exceptions.dart';
-import 'package:pinar_app/core/errors/failures.dart';
-import 'package:pinar_app/features/auth/data/datasources/auth_datasource.dart';
-import 'package:pinar_app/features/auth/data/models/user_model.dart';
-import 'package:pinar_app/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:pinar_app/features/auth/domain/entities/user_entity.dart';
+import 'package:cubamap/core/errors/exceptions.dart';
+import 'package:cubamap/core/errors/failures.dart';
+import 'package:cubamap/features/auth/data/datasources/auth_datasource.dart';
+import 'package:cubamap/features/auth/data/models/user_model.dart';
+import 'package:cubamap/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:cubamap/features/auth/domain/entities/user_entity.dart';
 
 class MockAuthDataSource extends Mock implements AuthDataSource {}
 

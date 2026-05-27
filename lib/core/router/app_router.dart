@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../shell/main_shell.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
-import '../../features/auth/presentation/cubit/auth_state.dart';
+import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
+import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/auth/presentation/pages/verify_otp_page.dart';
+import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/home/presentation/pages/home_page.dart';
 import '../../injection_container.dart';
 import 'route_names.dart';
 
@@ -24,39 +29,12 @@ class _PlaceholderPage extends StatelessWidget {
   }
 }
 
-class _TempHomePage extends StatelessWidget {
-  const _TempHomePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (context, state) {
-        if (state is AuthUnauthenticated) {
-          context.go(RouteNames.login);
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.logout),
-              tooltip: 'Cerrar sesión',
-              onPressed: () => context.read<AuthCubit>().logout(),
-            ),
-          ],
-        ),
-        body: const Center(child: Text('Home — próximamente')),
-      ),
-    );
-  }
-}
-
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: RouteNames.splash,
     debugLogDiagnostics: true,
     routes: [
+      // ── Auth routes (outside shell) ──────────────────────────────
       GoRoute(
         path: RouteNames.splash,
         builder: (_, __) => BlocProvider(
@@ -79,64 +57,86 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: RouteNames.onboarding,
-        builder: (_, __) => const _PlaceholderPage('Onboarding'),
-      ),
-      GoRoute(
-        path: RouteNames.home,
+        path: RouteNames.forgotPassword,
         builder: (_, __) => BlocProvider(
           create: (_) => sl<AuthCubit>(),
-          child: const _TempHomePage(),
+          child: const ForgotPasswordPage(),
         ),
       ),
       GoRoute(
-        path: RouteNames.busqueda,
-        builder: (_, __) => const _PlaceholderPage('Búsqueda'),
+        path: RouteNames.verifyOtp,
+        builder: (_, state) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: VerifyOtpPage(email: state.extra as String),
+        ),
       ),
       GoRoute(
-        path: RouteNames.resultados,
-        builder: (_, __) => const _PlaceholderPage('Resultados'),
+        path: RouteNames.resetPassword,
+        builder: (_, __) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: const ResetPasswordPage(),
+        ),
       ),
+
+      // ── Negocio detail (sin bottom nav — se implementa en feature busqueda) ──
       GoRoute(
-        path: RouteNames.favoritos,
-        builder: (_, __) => const _PlaceholderPage('Favoritos'),
+        path: '/negocio/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return _PlaceholderPage('Negocio $id');
+        },
       ),
-      GoRoute(
-        path: RouteNames.perfil,
-        builder: (_, __) => const _PlaceholderPage('Perfil'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioDetalle,
-        builder: (_, __) => const _PlaceholderPage('Negocio Detalle'),
-      ),
-      GoRoute(
-        path: RouteNames.registrarNegocio,
-        builder: (_, __) => const _PlaceholderPage('Registrar Negocio'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioDashboard,
-        builder: (_, __) => const _PlaceholderPage('Dashboard Negocio'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioProductos,
-        builder: (_, __) => const _PlaceholderPage('Productos Negocio'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioAgregarProducto,
-        builder: (_, __) => const _PlaceholderPage('Agregar Producto'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioMiNegocio,
-        builder: (_, __) => const _PlaceholderPage('Mi Negocio'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioSuscripcion,
-        builder: (_, __) => const _PlaceholderPage('Suscripción'),
-      ),
-      GoRoute(
-        path: RouteNames.negocioActualizarDisponibilidad,
-        builder: (_, __) =>
-            const _PlaceholderPage('Actualizar Disponibilidad'),
+
+      // ── Main shell (4 tabs) ──────────────────────────────────────
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => BlocProvider(
+          create: (_) => sl<AuthCubit>(),
+          child: MainShell(navigationShell: navigationShell),
+        ),
+        branches: [
+          // Tab 0: Inicio
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.home,
+                builder: (context, state) => BlocProvider(
+                  create: (_) => sl<HomeCubit>(),
+                  child: const HomePage(),
+                ),
+              ),
+            ],
+          ),
+
+          // Tab 1: Buscar
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.busqueda,
+                builder: (_, __) => const _PlaceholderPage('Buscar'),
+              ),
+            ],
+          ),
+
+          // Tab 2: Favoritos
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.favoritos,
+                builder: (_, __) => const _PlaceholderPage('Favoritos'),
+              ),
+            ],
+          ),
+
+          // Tab 3: Perfil
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RouteNames.perfil,
+                builder: (_, __) => const _PlaceholderPage('Perfil'),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

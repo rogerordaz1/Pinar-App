@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pinar_app/core/errors/failures.dart';
-import 'package:pinar_app/core/usecases/usecase.dart';
-import 'package:pinar_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:pinar_app/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:cubamap/core/errors/failures.dart';
+import 'package:cubamap/core/usecases/usecase.dart';
+import 'package:cubamap/features/auth/domain/repositories/auth_repository.dart';
+import 'package:cubamap/features/auth/domain/usecases/logout_usecase.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
