@@ -49,6 +49,47 @@ lib/
   main.dart
 ```
 
+## Barrel Files (importaciones)
+Cada capa tiene un archivo barril. En páginas y widgets, usar siempre el barrel — nunca rutas profundas individuales.
+
+| Barrel | Path | Exporta |
+|---|---|---|
+| Core | `lib/core/core.dart` | AppColors, AppTextStyles, AppTheme, RouteNames, ExitDialog |
+| Auth | `lib/features/auth/auth.dart` | AuthCubit, AuthState, UserEntity |
+| Home | `lib/features/home/home.dart` | HomeCubit, HomeState, entidades, widgets |
+
+**Reglas:**
+- Las **páginas** importan solo el barrel de su feature + `core.dart`
+- Los **widgets** importan `core.dart` + barrel de otro feature si lo necesitan; **nunca importan el barrel de su propio feature** (circular)
+- Los widgets mantienen importación directa de sus propias entidades
+- Al agregar una nueva feature, crear `lib/features/<nombre>/<nombre>.dart` y añadirla a esta tabla
+
+## BLoC / Cubit Providers
+Todos los cubits se declaran en `main.dart` dentro del `MultiBlocProvider` que envuelve `runApp`. Esto garantiza acceso desde cualquier parte del árbol, incluyendo rutas de go_router.
+
+```dart
+// main.dart
+runApp(
+  MultiBlocProvider(
+    providers: [
+      BlocProvider(create: (_) => di.sl<AuthCubit>()..checkAuth()),
+      BlocProvider(create: (_) => di.sl<HomeCubit>()..loadHome()),
+      // Agregar futuros cubits aquí
+    ],
+    child: const App(),
+  ),
+);
+```
+
+- `AuthCubit` va aquí con `..checkAuth()` para restaurar sesión al arrancar
+- Cada cubit de feature se agrega con su método de carga inicial si aplica
+- El router (`app_router.dart`) y `app.dart` no proveen ningún cubit
+
+## Widget Rules
+- **Prefer `StatelessWidget` always.** Only use `StatefulWidget` when there is no other option: e.g., `WidgetsBindingObserver`, managing a `TextEditingController`/`AnimationController` that cannot live in a Cubit, or wrapping a third-party widget that requires it.
+- State that affects the UI goes in a Cubit/Bloc — never in `setState`.
+- If you find yourself reaching for `StatefulWidget`, first ask: can this live in the Cubit?
+
 ## iOS
 - iOS folder scaffolded, deployment target: iOS 13.0
 - Permissions in `ios/Runner/Info.plist`: location (when in use + always)
