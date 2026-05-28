@@ -27,22 +27,22 @@ class ProfilePage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
-          _ProfileHeader(inicial: inicial, nombre: nombre, email: email),
+          ProfileHeader(inicial: inicial, nombre: nombre, email: email),
           const SizedBox(height: 24),
-          _SectionCard(
+          ProfileSectionCard(
             title: 'Mi Actividad',
             items: [
-              _ProfileTile(
+              ProfileTile(
                 icon: Icons.favorite_outline,
                 label: 'Mis Favoritos',
                 onTap: null,
               ),
-              _ProfileTile(
+              ProfileTile(
                 icon: Icons.bookmark_outline,
                 label: 'Productos Guardados',
                 onTap: null,
               ),
-              _ProfileTile(
+              ProfileTile(
                 icon: Icons.history,
                 label: 'Historial de Búsqueda',
                 onTap: null,
@@ -51,15 +51,15 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          _SectionCard(
+          ProfileSectionCard(
             title: 'Preferencias',
             items: [
-              _ProfileTile(
+              ProfileTile(
                 icon: Icons.settings_outlined,
                 label: 'Configuración',
                 onTap: null,
               ),
-              _ProfileTile(
+              ProfileTile(
                 icon: Icons.notifications_outlined,
                 label: 'Configurar Notificaciones',
                 onTap: null,
@@ -68,9 +68,9 @@ class ProfilePage extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          _SectionCard(
+          ProfileSectionCard(
             items: [
-              _ProfileTile(
+              ProfileTile(
                 icon: Icons.logout,
                 label: 'Cerrar Sesión',
                 iconColor: AppColors.error,
@@ -93,160 +93,6 @@ class ProfilePage extends StatelessWidget {
           const SizedBox(height: 16),
         ],
       ),
-    );
-  }
-}
-
-class _ProfileHeader extends StatelessWidget {
-  final String inicial;
-  final String nombre;
-  final String email;
-
-  const _ProfileHeader({
-    required this.inicial,
-    required this.nombre,
-    required this.email,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.surfaceContainerLowest,
-      borderRadius: BorderRadius.circular(16),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Row(
-        children: [
-          CircleAvatar(
-            radius: 36,
-            backgroundColor: AppColors.primary,
-            child: Text(
-              inicial,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  nombre,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.onSurface,
-                      ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  email,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.onSurfaceVariant,
-                      ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-        ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SectionCard extends StatelessWidget {
-  final String? title;
-  final List<Widget> items;
-
-  const _SectionCard({this.title, required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title != null) ...[
-          Padding(
-            padding: const EdgeInsets.only(left: 4, bottom: 8),
-            child: Text(
-              title!,
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AppColors.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                  ),
-            ),
-          ),
-        ],
-        Material(
-          color: AppColors.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(16),
-          child: Column(children: items),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProfileTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback? onTap;
-  final Color? iconColor;
-  final Color? labelColor;
-  final bool showChevron;
-  final bool showDivider;
-
-  const _ProfileTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.iconColor,
-    this.labelColor,
-    this.showChevron = true,
-    this.showDivider = true,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final effectiveIconColor = iconColor ?? AppColors.onSurfaceVariant;
-    final effectiveLabelColor = labelColor ?? AppColors.onSurface;
-
-    return Column(
-      children: [
-        ListTile(
-          leading: Icon(icon, color: effectiveIconColor, size: 22),
-          title: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: effectiveLabelColor,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-          trailing: showChevron
-              ? Icon(Icons.chevron_right,
-                  color: AppColors.onSurfaceVariant, size: 20)
-              : null,
-          onTap: onTap,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-          minLeadingWidth: 24,
-        ),
-        if (showDivider)
-          Divider(
-            height: 1,
-            indent: 56,
-            endIndent: 16,
-            color: AppColors.outlineVariant.withOpacity(0.5),
-          ),
-      ],
     );
   }
 }

@@ -129,7 +129,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             padding: EdgeInsets.only(
                                 right: i < _length - 1 ? 8 : 0),
                             child:
-                                _OtpBox(char: char, isCurrent: isCurrent),
+                                OtpBox(char: char, isCurrent: isCurrent),
                           );
                         }),
                       ),
@@ -215,36 +215,3 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   }
 }
 
-class _OtpBox extends StatelessWidget {
-  final String char;
-  final bool isCurrent;
-
-  const _OtpBox({required this.char, required this.isCurrent});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      width: 36,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isCurrent ? AppColors.primary : AppColors.outlineVariant,
-          width: isCurrent ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(12),
-        color: char.isNotEmpty
-            ? AppColors.onPrimaryContainer
-            : Colors.transparent,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        char,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
-      ),
-    );
-  }
-}
