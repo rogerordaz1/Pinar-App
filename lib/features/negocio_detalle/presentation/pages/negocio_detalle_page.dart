@@ -20,6 +20,8 @@ class NegocioDetallePage extends StatelessWidget {
     direccion: 'Km 4.5 Carretera a Viñales, Pinar del Río',
     telefono: '+53 48 123456',
     whatsapp: '+5348123456',
+    heroImageUrl:
+        'https://lh3.googleusercontent.com/aida-public/AB6AXuCavz2jeWxOolJbygma4uZbzStPQ0P_LQiZhe8QILtbdQ7HGX1iKGqx-tZcGoWAUvnMdFtcYf-DUngzhoL4dFajsZjjqz3xEkvM-v8v5GIC2Vqf8Tq-tf-jBQTGd0_SEK0At9XGHoe9jD21Ofc6pip71pFUXkRjEIpQl3n9lotj5mJSEfZdRYD6eY_u3psPWc0Le1lF9h4Ga4vfgQYFTA8wgGq5fA6V862g8bgsLdka90CTWAmRk8E2lVRIaM71o1GmFabN6sBs7w',
     infoEntrega: 'Entregas todos los sábados en el casco urbano',
     certificaciones: ['Orgánico', 'Sostenible', 'Directo'],
     productos: [
@@ -30,6 +32,8 @@ class NegocioDetallePage extends StatelessWidget {
         unidad: 'cartón',
         disponible: true,
         actualizadoHace: 'hace 2h',
+        imagenUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuARnHI9JFHIaF8pIBIY8J1udTjenEHhmX1YCJZ4sjPtdCj2jXXbuOugkLGSZ_lFaJFaXRNJHWuqufjfuYTKjzt2PhR5M-YPuFY5pn5nQ4tvcpGbcSsXV1pT__kpdBOjLnxIUMTB1mTAFu9f-inWgkeIxGqOzLI6rg9h6l8iX0rtvvReTz5OK7fXsV9rrr_HU1koHjJ2p_WkdMg_dog8kc0jsFhZduOrwUv2T4R3kpY4GpP9e_cGroFJL3G_D2dQPPzLd0bp_ElWxg',
       ),
       ProductoNegocio(
         id: 'p2',
@@ -38,6 +42,8 @@ class NegocioDetallePage extends StatelessWidget {
         unidad: 'kg',
         disponible: true,
         actualizadoHace: 'hace 5h',
+        imagenUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuB1b0rxvXZ6dnmkxxLD0_iwit5Ng7X90nU-UYLWReX60N0F7WtT8ORczIrPVaeJI0iU2f0GWXexbo7EaHzK5gxwNsz6Fct_q8BEsMQSBqlaR3mWGbcwcDx839D0TaHclAVQHAFbjaJIRNNrK3DmR2GpRSGet04CQuhOCA68WD9XXE41Kpg3aT0dDYDZpVj49Zbzw20i-KylP7tnSIUa8QIkU_5sehxxuZCmVEfwqzad4JJ_GQKUFOLot8oUoxkEkzjXkScYNs7Vcw',
       ),
       ProductoNegocio(
         id: 'p3',
@@ -46,6 +52,8 @@ class NegocioDetallePage extends StatelessWidget {
         unidad: '500ml',
         disponible: true,
         actualizadoHace: 'hace 1d',
+        imagenUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuBIlrVpqwVmhiuL1deQdy-CWFT-RiY1CX5KogKKwAN6h9QwEsudn3UVBMcpH3I3RK9Gmw7H8lytg-iufzF2nmMQXfqqGdat_QO8pjkZOu-Kllkrchx2W1jWNy03l7UMtyQ1qRWb0Nbt1_S1LlWQMiW483W3A_fS9rTEdfMVZ1Bw3NX6yziEI8XYA6Zonvz3ZQJZ84XeYJc8vpa2LsAhUR5BVPipgoU9X83YGRX2mo-JdEulKG_p5Opk0HbcjtFbRSzlfs0s3UBDvw',
       ),
     ],
   );
@@ -501,17 +509,38 @@ class _ProductoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image / placeholder
-            Container(
-              height: 100,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius:
-                    const BorderRadius.vertical(top: Radius.circular(16)),
-              ),
+            // Image
+            ClipRRect(
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16)),
               child: Stack(
                 children: [
-                  Center(child: Icon(_icon(), color: color, size: 40)),
+                  if (producto.imagenUrl != null)
+                    CachedNetworkImage(
+                      imageUrl: producto.imagenUrl!,
+                      height: 100,
+                      width: _cardWidth,
+                      fit: BoxFit.cover,
+                      placeholder: (_, __) => Container(
+                        height: 100,
+                        color: color.withValues(alpha: 0.12),
+                        child: Center(
+                            child: Icon(_icon(), color: color, size: 40)),
+                      ),
+                      errorWidget: (_, __, ___) => Container(
+                        height: 100,
+                        color: color.withValues(alpha: 0.12),
+                        child: Center(
+                            child: Icon(_icon(), color: color, size: 40)),
+                      ),
+                    )
+                  else
+                    Container(
+                      height: 100,
+                      width: _cardWidth,
+                      color: color.withValues(alpha: 0.12),
+                      child: Center(child: Icon(_icon(), color: color, size: 40)),
+                    ),
                   if (producto.disponible)
                     Positioned(
                       top: 8,
