@@ -131,12 +131,12 @@ class _EncuentraIllustrationState extends State<_EncuentraIllustration>
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 650),
     );
     _slideAnim = Tween<Offset>(
-      begin: const Offset(0, -2.5),
+      begin: const Offset(0, -1.8),
       end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.elasticOut));
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack));
     _fadeAnim = CurvedAnimation(
       parent: _ctrl,
       curve: const Interval(0.0, 0.35, curve: Curves.easeIn),
@@ -210,7 +210,7 @@ class _EncuentraIllustrationState extends State<_EncuentraIllustration>
           Positioned(
             bottom: 0,
             left: 12,
-            right: 36,
+            right: 12,
             child: Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -230,11 +230,13 @@ class _EncuentraIllustrationState extends State<_EncuentraIllustration>
                   Icon(Icons.search,
                       color: AppColors.onSurfaceVariant, size: 18),
                   const SizedBox(width: 8),
-                  const Text(
-                    'Harina de Trigo',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.onSurfaceVariant,
+                  Expanded(
+                    child: Text(
+                      'Harina de Trigo',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
