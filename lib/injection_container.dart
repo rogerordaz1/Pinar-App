@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'core/utils/credential_storage.dart';
 import 'features/auth/data/datasources/auth_datasource.dart';
 import 'features/auth/data/datasources/supabase_auth_datasource.dart';
 import 'features/auth/data/repositories/auth_repository_impl.dart';
@@ -30,6 +31,7 @@ void _registerExternal() {
   sl.registerLazySingleton<SupabaseClient>(
     () => Supabase.instance.client,
   );
+  sl.registerLazySingleton(() => CredentialStorage());
 }
 
 Future<void> _registerFeatures() async {
@@ -46,6 +48,7 @@ Future<void> _registerAuth() async {
       logoutUseCase: sl(),
       getCurrentUserUseCase: sl(),
       authRepository: sl(),
+      credentialStorage: sl(),
     ),
   );
 
