@@ -20,7 +20,7 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => di.sl<AuthCubit>()..checkAuth()),
+        BlocProvider(create: (_) => di.sl<AuthCubit>()),
         BlocProvider(create: (_) => di.sl<HomeCubit>()..loadHome()),
         // Agregar futuros cubits aquí:
         // BlocProvider(create: (_) => di.sl<BusquedaCubit>()),
