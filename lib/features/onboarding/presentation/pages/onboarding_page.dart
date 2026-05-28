@@ -21,10 +21,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   static final _slides = [
     OnboardingSlideData(
-      illustration: Image.asset(
-        'assets/images/onboarding/slide_descubre.png',
-        height: 220,
-        fit: BoxFit.contain,
+      illustration: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Image.asset(
+          'assets/images/onboarding/slide_descubre.png',
+          height: 242,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
       ),
       title: 'Explora Pinar del Río',
       description:
