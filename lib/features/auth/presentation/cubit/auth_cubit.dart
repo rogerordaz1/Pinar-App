@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../../../../core/usecases/usecase.dart';
 import '../../../../core/utils/credential_storage.dart';
+import '../../../../core/utils/onboarding_service.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -19,6 +20,7 @@ class AuthCubit extends Cubit<AuthState> {
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final AuthRepository authRepository;
   final CredentialStorage credentialStorage;
+  final OnboardingService onboardingService;
 
   StreamSubscription<supabase.AuthState>? _googleAuthSub;
 
@@ -29,7 +31,11 @@ class AuthCubit extends Cubit<AuthState> {
     required this.getCurrentUserUseCase,
     required this.authRepository,
     required this.credentialStorage,
+    required this.onboardingService,
   }) : super(const AuthInitial());
+
+  Future<bool> hasSeenOnboarding() => onboardingService.hasSeen();
+  Future<void> markOnboardingSeen() => onboardingService.markSeen();
 
   Future<void> checkAuth() async {
     emit(const AuthLoading());
