@@ -140,9 +140,9 @@ class _EncuentraIllustration extends StatelessWidget {
             ),
           ),
 
-          // Ícono de bolsa — cae de arriba una sola vez
+          // Ícono de bolsa — glass, cae de arriba una sola vez, un poco arriba del borde
           Positioned(
-            top: 0,
+            top: -16,
             right: 0,
             child: TweenAnimationBuilder<double>(
               tween: Tween(begin: -64.0, end: 0.0),
@@ -150,66 +150,64 @@ class _EncuentraIllustration extends StatelessWidget {
               curve: Curves.easeOutBack,
               builder: (_, dy, child) =>
                   Transform.translate(offset: Offset(0, dy), child: child),
-              child: Container(
-                width: 52,
-                height: 52,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.18),
-                      blurRadius: 12,
-                      offset: const Offset(0, 4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                  child: Container(
+                    width: 52,
+                    height: 52,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.35),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.4),
+                        width: 1,
+                      ),
                     ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.shopping_bag,
-                  color: Colors.white,
-                  size: 28,
+                    child: const Icon(
+                      Icons.shopping_bag,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
 
-          // Barra de búsqueda — glass, anclada un poco por encima del borde
+          // Barra de búsqueda — blanco sólido, anclada abajo a la izquierda
           Positioned(
-            bottom: 20,
+            bottom: 0,
             left: 12,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.35),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      width: 1,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 12,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.search,
+                      color: AppColors.onSurfaceVariant, size: 18),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'Harina de Trigo',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.onSurfaceVariant,
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.search,
-                          color: Colors.white.withValues(alpha: 0.9),
-                          size: 18),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Harina de Trigo',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
               ),
             ),
           ),
