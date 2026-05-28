@@ -12,6 +12,7 @@ class RouteNames {
   static const String favoritos = '/favoritos';
   static const String perfil = '/perfil';
   static const String negocioDetalle = '/negocio/:id';
+  static const String categoriaProductos = '/categoria/:id';
   static const String registrarNegocio = '/registrar-negocio';
   static const String negocioDashboard = '/negocio-dashboard';
   static const String negocioProductos = '/negocio-productos';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/core.dart';
 import '../../domain/entities/categoria_negocio.dart';
 import 'category_chip.dart';
 import 'home_section_header.dart';
@@ -24,9 +23,9 @@ class CategorySection extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, index) => CategoryChip(
               categoria: categorias[index],
-              onTap: () => context.go(
-                RouteNames.busqueda,
-                extra: categorias[index].id,
+              onTap: () => context.push(
+                '/categoria/${categorias[index].id}',
+                extra: categorias[index].nombre,
               ),
             ),
           ),
