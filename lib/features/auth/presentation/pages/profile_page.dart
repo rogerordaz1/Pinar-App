@@ -16,17 +16,9 @@ class ProfilePage extends StatelessWidget {
     final email = user?.email ?? '';
     final inicial = nombre.isNotEmpty ? nombre[0].toUpperCase() : 'U';
 
-    return Scaffold(
-      backgroundColor: AppColors.surface,
-      appBar: AppBar(
-        backgroundColor: AppColors.surface,
-        elevation: 0,
-        title: const Text('Mi Perfil'),
-        centerTitle: false,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        children: [
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      children: [
           ProfileHeader(inicial: inicial, nombre: nombre, email: email),
           const SizedBox(height: 24),
           ProfileSectionCard(
@@ -92,7 +84,6 @@ class ProfilePage extends StatelessWidget {
           ),
           const SizedBox(height: 16),
         ],
-      ),
-    );
+      );
   }
 }

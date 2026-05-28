@@ -52,11 +52,6 @@ class HomeHeader extends StatelessWidget {
               ],
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: null,
-            tooltip: 'Notificaciones',
-          ),
         ],
       ),
     );

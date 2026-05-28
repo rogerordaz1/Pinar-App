@@ -19,11 +19,8 @@ class _PlaceholderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(name)),
-      body: Center(
-        child: Text(name, style: Theme.of(context).textTheme.titleLarge),
-      ),
+    return Center(
+      child: Text(name, style: Theme.of(context).textTheme.titleLarge),
     );
   }
 }
