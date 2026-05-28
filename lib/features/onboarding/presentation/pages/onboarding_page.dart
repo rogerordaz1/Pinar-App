@@ -221,7 +221,7 @@ class _EncuentraIllustration extends StatelessWidget {
   }
 }
 
-// ── Ilustración slide 3: campana con chip de notificación ────────────────────
+// ── Ilustración slide 3: mockup de teléfono con campana y chip ───────────────
 
 class _AlertasIllustration extends StatelessWidget {
   const _AlertasIllustration();
@@ -229,29 +229,76 @@ class _AlertasIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 220,
+      height: 242,
       child: Stack(
+        clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
+          // Teléfono
           Container(
             width: 140,
-            height: 140,
-            decoration: const BoxDecoration(
-              color: AppColors.onPrimaryContainer,
-              shape: BoxShape.circle,
+            height: 220,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(28),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.08),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.notifications_active_outlined,
-              size: 72,
-              color: AppColors.primary,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  height: 8,
+                  width: 64,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ],
             ),
           ),
+
+          // Campana — círculo verde, esquina superior derecha del teléfono
           Positioned(
-            top: 24,
-            right: 20,
+            top: 10,
+            right: 40,
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: const BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.notifications_active,
+                color: Colors.white,
+                size: 26,
+              ),
+            ),
+          ),
+
+          // Chip "¡Aceite llegó!" — izquierda, a la altura media del teléfono
+          Positioned(
+            left: 16,
+            top: 88,
             child: Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(20),
@@ -267,7 +314,7 @@ class _AlertasIllustration extends StatelessWidget {
                 '¡Aceite llegó!',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
               ),
