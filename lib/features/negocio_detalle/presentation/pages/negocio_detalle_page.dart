@@ -1,67 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
-import '../../domain/entities/negocio_detalle.dart';
+import '../../negocio_detalle.dart';
 
 class NegocioDetallePage extends StatelessWidget {
   final String negocioId;
   const NegocioDetallePage({super.key, required this.negocioId});
 
-  static const _mock = NegocioDetalle(
-    id: '1',
-    nombre: 'Finca La Esperanza',
-    categoria: 'Agropecuario',
-    abierto: true,
-    distanciaKm: 1.2,
-    verificado: true,
-    calificacion: 4.8,
-    totalResenas: 124,
-    direccion: 'Km 4.5 Carretera a Viñales, Pinar del Río',
-    telefono: '+53 48 123456',
-    whatsapp: '+5348123456',
-    heroImageUrl:
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuCavz2jeWxOolJbygma4uZbzStPQ0P_LQiZhe8QILtbdQ7HGX1iKGqx-tZcGoWAUvnMdFtcYf-DUngzhoL4dFajsZjjqz3xEkvM-v8v5GIC2Vqf8Tq-tf-jBQTGd0_SEK0At9XGHoe9jD21Ofc6pip71pFUXkRjEIpQl3n9lotj5mJSEfZdRYD6eY_u3psPWc0Le1lF9h4Ga4vfgQYFTA8wgGq5fA6V862g8bgsLdka90CTWAmRk8E2lVRIaM71o1GmFabN6sBs7w',
-    infoEntrega: 'Entregas todos los sábados en el casco urbano',
-    certificaciones: ['Orgánico', 'Sostenible', 'Directo'],
-    productos: [
-      ProductoNegocio(
-        id: 'p1',
-        nombre: 'Huevos de Campo',
-        precio: 350,
-        unidad: 'cartón',
-        disponible: true,
-        actualizadoHace: 'hace 2h',
-        imagenUrl:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuARnHI9JFHIaF8pIBIY8J1udTjenEHhmX1YCJZ4sjPtdCj2jXXbuOugkLGSZ_lFaJFaXRNJHWuqufjfuYTKjzt2PhR5M-YPuFY5pn5nQ4tvcpGbcSsXV1pT__kpdBOjLnxIUMTB1mTAFu9f-inWgkeIxGqOzLI6rg9h6l8iX0rtvvReTz5OK7fXsV9rrr_HU1koHjJ2p_WkdMg_dog8kc0jsFhZduOrwUv2T4R3kpY4GpP9e_cGroFJL3G_D2dQPPzLd0bp_ElWxg',
-      ),
-      ProductoNegocio(
-        id: 'p2',
-        nombre: 'Pollo Entero Orgánico',
-        precio: 1200,
-        unidad: 'kg',
-        disponible: true,
-        actualizadoHace: 'hace 5h',
-        imagenUrl:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuB1b0rxvXZ6dnmkxxLD0_iwit5Ng7X90nU-UYLWReX60N0F7WtT8ORczIrPVaeJI0iU2f0GWXexbo7EaHzK5gxwNsz6Fct_q8BEsMQSBqlaR3mWGbcwcDx839D0TaHclAVQHAFbjaJIRNNrK3DmR2GpRSGet04CQuhOCA68WD9XXE41Kpg3aT0dDYDZpVj49Zbzw20i-KylP7tnSIUa8QIkU_5sehxxuZCmVEfwqzad4JJ_GQKUFOLot8oUoxkEkzjXkScYNs7Vcw',
-      ),
-      ProductoNegocio(
-        id: 'p3',
-        nombre: 'Miel Multiflora',
-        precio: 450,
-        unidad: '500ml',
-        disponible: true,
-        actualizadoHace: 'hace 1d',
-        imagenUrl:
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuBIlrVpqwVmhiuL1deQdy-CWFT-RiY1CX5KogKKwAN6h9QwEsudn3UVBMcpH3I3RK9Gmw7H8lytg-iufzF2nmMQXfqqGdat_QO8pjkZOu-Kllkrchx2W1jWNy03l7UMtyQ1qRWb0Nbt1_S1LlWQMiW483W3A_fS9rTEdfMVZ1Bw3NX6yziEI8XYA6Zonvz3ZQJZ84XeYJc8vpa2LsAhUR5BVPipgoU9X83YGRX2mo-JdEulKG_p5Opk0HbcjtFbRSzlfs0s3UBDvw',
-      ),
-    ],
-  );
-
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).padding.bottom;
-    const negocio = _mock;
 
     return Scaffold(
       backgroundColor: AppColors.surface,
@@ -100,64 +50,93 @@ class NegocioDetallePage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: AppColors.primary,
-            ),
+            icon: const Icon(Icons.notifications_outlined, color: AppColors.primary),
             onPressed: () {},
           ),
           const SizedBox(width: 4),
         ],
       ),
-      body: Stack(
-        children: [
-          // Hero image (behind scroll)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 240,
-            child: _HeroBackground(negocio: negocio),
-          ),
-          // Scrollable content
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 180),
-                Stack(
-                  clipBehavior: Clip.none,
-                  alignment: Alignment.topCenter,
+      body: BlocBuilder<NegocioDetalleCubit, NegocioDetalleState>(
+        builder: (context, state) => switch (state) {
+          NegocioDetalleInitial() || NegocioDetalleLoading() =>
+            const Center(child: CircularProgressIndicator()),
+          NegocioDetalleLoaded(:final negocio) =>
+            _NegocioContent(negocio: negocio, bottomPadding: bottom),
+          NegocioDetalleError(:final message) => Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    // White panel — margin-top creates the logo overlap gap
-                    Container(
-                      margin: const EdgeInsets.only(top: 44),
-                      decoration: const BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(24)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          const SizedBox(height: 52),
-                          _BusinessInfoSection(negocio: negocio),
-                          _ActionButtonsSection(negocio: negocio),
-                          _SectionSeparator(),
-                          _ProductosSection(negocio: negocio),
-                          _FooterSection(negocio: negocio),
-                          SizedBox(height: bottom + 16),
-                        ],
-                      ),
+                    const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+                    const SizedBox(height: 16),
+                    Text(message, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () =>
+                          context.read<NegocioDetalleCubit>().loadNegocio(negocioId),
+                      child: const Text('Reintentar'),
                     ),
-                    // Logo circle centered on hero/panel boundary
-                    const Positioned(top: 0, child: _LogoCircle()),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+        },
       ),
+    );
+  }
+}
+
+// ── Content (only rendered when loaded) ─────────────────────────────────────
+
+class _NegocioContent extends StatelessWidget {
+  final NegocioDetalle negocio;
+  final double bottomPadding;
+
+  const _NegocioContent({required this.negocio, required this.bottomPadding});
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          top: 0, left: 0, right: 0, height: 240,
+          child: _HeroBackground(negocio: negocio),
+        ),
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 180),
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.topCenter,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 44),
+                    decoration: const BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 52),
+                        _BusinessInfoSection(negocio: negocio),
+                        _ActionButtonsSection(negocio: negocio),
+                        _SectionSeparator(),
+                        _ProductosSection(negocio: negocio),
+                        _FooterSection(negocio: negocio),
+                        SizedBox(height: bottomPadding + 16),
+                      ],
+                    ),
+                  ),
+                  const Positioned(top: 0, child: _LogoCircle()),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -186,7 +165,7 @@ class _HeroBackground extends StatelessWidget {
         ),
       ),
       child: const Center(
-        child: Icon(Icons.grass, color: Colors.white54, size: 80),
+        child: Icon(Icons.storefront_outlined, color: Colors.white54, size: 80),
       ),
     );
   }
@@ -214,7 +193,7 @@ class _LogoCircle extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(Icons.grass, color: AppColors.primary, size: 44),
+      child: const Icon(Icons.storefront_outlined, color: AppColors.primary, size: 44),
     );
   }
 }
@@ -256,15 +235,12 @@ class _BusinessInfoSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.star_rounded,
-                  color: AppColors.warning, size: 18),
+              const Icon(Icons.star_rounded, color: AppColors.warning, size: 18),
               const SizedBox(width: 4),
               Text(
                 negocio.calificacion.toStringAsFixed(1),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.onSurface,
-                ),
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w700),
               ),
               const SizedBox(width: 4),
               Text(
@@ -311,7 +287,6 @@ class _StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = abierto ? AppColors.success : AppColors.error;
-    final label = abierto ? 'Abierto ahora' : 'Cerrado';
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
@@ -328,7 +303,7 @@ class _StatusBadge extends StatelessWidget {
           ),
           const SizedBox(width: 6),
           Text(
-            label,
+            abierto ? 'Abierto ahora' : 'Cerrado',
             style: TextStyle(
               color: color,
               fontSize: 12,
@@ -355,23 +330,23 @@ class _ActionButtonsSection extends StatelessWidget {
         children: [
           Expanded(
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: negocio.whatsapp != null ? () {} : null,
               icon: const Icon(Icons.chat_bubble_outline, size: 18),
               label: const Text('WhatsApp'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
                 foregroundColor: AppColors.onPrimary,
+                disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.4),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                    borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: OutlinedButton.icon(
-              onPressed: () {},
+              onPressed: negocio.telefono != null ? () {} : null,
               icon: const Icon(Icons.phone_outlined, size: 18),
               label: const Text('Llamar'),
               style: OutlinedButton.styleFrom(
@@ -379,8 +354,7 @@ class _ActionButtonsSection extends StatelessWidget {
                 side: const BorderSide(color: AppColors.primary, width: 1.5),
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                    borderRadius: BorderRadius.circular(12)),
               ),
             ),
           ),
@@ -395,7 +369,8 @@ class _ActionButtonsSection extends StatelessWidget {
 class _SectionSeparator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(height: 8, child: ColoredBox(color: AppColors.surfaceContainerLow));
+    return const SizedBox(
+        height: 8, child: ColoredBox(color: AppColors.surfaceContainerLow));
   }
 }
 
@@ -407,6 +382,7 @@ class _ProductosSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (negocio.productos.isEmpty) return const SizedBox.shrink();
     final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(top: 20, bottom: 8),
@@ -420,10 +396,8 @@ class _ProductosSection extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Productos Disponibles',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.onSurface,
-                    ),
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.w700),
                   ),
                 ),
                 InkWell(
@@ -479,20 +453,28 @@ class _ProductoCard extends StatelessWidget {
     if (name.contains('huevo')) return const Color(0xFFF9A825);
     if (name.contains('pollo')) return const Color(0xFFE65100);
     if (name.contains('miel')) return const Color(0xFFFF8F00);
+    if (name.contains('carne') || name.contains('cerdo')) {
+      return const Color(0xFFB71C1C);
+    }
     return AppColors.primary;
   }
 
   IconData _icon() {
     final name = producto.nombre.toLowerCase();
     if (name.contains('huevo')) return Icons.egg_outlined;
-    if (name.contains('pollo')) return Icons.set_meal_outlined;
-    if (name.contains('miel')) return Icons.local_florist_outlined;
+    if (name.contains('pollo') || name.contains('carne')) {
+      return Icons.set_meal_outlined;
+    }
+    if (name.contains('pan') || name.contains('bizcocho')) {
+      return Icons.bakery_dining;
+    }
+    if (name.contains('mg') || name.contains('aspirina')) {
+      return Icons.medication_outlined;
+    }
+    if (name.contains('arroz') || name.contains('frijol')) {
+      return Icons.rice_bowl_outlined;
+    }
     return Icons.shopping_basket_outlined;
-  }
-
-  String get _precio {
-    final p = producto.precio.toInt();
-    return '\$$p / ${producto.unidad}';
   }
 
   @override
@@ -503,13 +485,11 @@ class _ProductoCard extends StatelessWidget {
       width: _cardWidth,
       child: Card(
         elevation: 0,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         color: AppColors.surfaceContainerLowest,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image
             ClipRRect(
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(16)),
@@ -521,26 +501,11 @@ class _ProductoCard extends StatelessWidget {
                       height: 100,
                       width: _cardWidth,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => Container(
-                        height: 100,
-                        color: color.withValues(alpha: 0.12),
-                        child: Center(
-                            child: Icon(_icon(), color: color, size: 40)),
-                      ),
-                      errorWidget: (_, __, ___) => Container(
-                        height: 100,
-                        color: color.withValues(alpha: 0.12),
-                        child: Center(
-                            child: Icon(_icon(), color: color, size: 40)),
-                      ),
+                      placeholder: (_, __) => _imagePlaceholder(color),
+                      errorWidget: (_, __, ___) => _imagePlaceholder(color),
                     )
                   else
-                    Container(
-                      height: 100,
-                      width: _cardWidth,
-                      color: color.withValues(alpha: 0.12),
-                      child: Center(child: Icon(_icon(), color: color, size: 40)),
-                    ),
+                    _imagePlaceholder(color),
                   if (producto.disponible)
                     Positioned(
                       top: 8,
@@ -565,7 +530,6 @@ class _ProductoCard extends StatelessWidget {
                 ],
               ),
             ),
-            // Details
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
@@ -573,16 +537,14 @@ class _ProductoCard extends StatelessWidget {
                 children: [
                   Text(
                     producto.nombre,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.onSurface,
-                    ),
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w600),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    _precio,
+                    '\$${producto.precio.toInt()} / ${producto.unidad}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: AppColors.primary,
@@ -606,6 +568,13 @@ class _ProductoCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _imagePlaceholder(Color color) => Container(
+        height: 100,
+        width: _cardWidth,
+        color: color.withValues(alpha: 0.12),
+        child: Center(child: Icon(_icon(), color: color, size: 40)),
+      );
 }
 
 // ── Footer ───────────────────────────────────────────────────────────────────
@@ -616,6 +585,10 @@ class _FooterSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hasContent =
+        negocio.infoEntrega != null || negocio.certificaciones.isNotEmpty;
+    if (!hasContent) return const SizedBox.shrink();
+
     final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.all(20),
@@ -638,14 +611,14 @@ class _FooterSection extends StatelessWidget {
                   child: Text(
                     negocio.infoEntrega!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: AppColors.onSurface,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            if (negocio.certificaciones.isNotEmpty)
+              const SizedBox(height: 12),
           ],
           if (negocio.certificaciones.isNotEmpty)
             Wrap(
@@ -673,9 +646,7 @@ class _CertBadge extends StatelessWidget {
         color: AppColors.primary.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.3),
-          width: 1,
-        ),
+            color: AppColors.primary.withValues(alpha: 0.3), width: 1),
       ),
       child: Text(
         cert,

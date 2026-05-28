@@ -12,7 +12,7 @@ import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/register_usecase.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/home/data/datasources/home_datasource.dart';
-import 'features/home/data/datasources/mock_home_datasource.dart';
+import 'features/home/data/datasources/supabase_home_datasource.dart';
 import 'features/home/data/repositories/home_repository_impl.dart';
 import 'features/home/domain/repositories/home_repository.dart';
 import 'features/home/domain/usecases/get_categorias_usecase.dart';
@@ -20,6 +20,12 @@ import 'features/home/domain/usecases/get_negocios_cercanos_usecase.dart';
 import 'features/home/domain/usecases/get_promociones_usecase.dart';
 import 'features/home/domain/usecases/get_productos_populares_usecase.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
+import 'features/negocio_detalle/data/datasources/negocio_detalle_datasource.dart';
+import 'features/negocio_detalle/data/datasources/supabase_negocio_detalle_datasource.dart';
+import 'features/negocio_detalle/data/repositories/negocio_detalle_repository_impl.dart';
+import 'features/negocio_detalle/domain/repositories/negocio_detalle_repository.dart';
+import 'features/negocio_detalle/domain/usecases/get_negocio_detalle_usecase.dart';
+import 'features/negocio_detalle/presentation/cubit/negocio_detalle_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -39,6 +45,7 @@ void _registerExternal() {
 Future<void> _registerFeatures() async {
   await _registerAuth();
   _registerHome();
+  _registerNegocioDetalle();
 }
 
 Future<void> _registerAuth() async {
@@ -94,8 +101,20 @@ void _registerHome() {
     () => HomeRepositoryImpl(sl()),
   );
 
-  // Data source — swap MockHomeDataSource → SupabaseHomeDataSource cuando esté listo
   sl.registerLazySingleton<HomeDataSource>(
-    () => MockHomeDataSource(),
+    () => SupabaseHomeDataSource(sl()),
+  );
+}
+
+void _registerNegocioDetalle() {
+  sl.registerFactory(
+    () => NegocioDetalleCubit(getNegocioDetalleUseCase: sl()),
+  );
+  sl.registerLazySingleton(() => GetNegocioDetalleUseCase(sl()));
+  sl.registerLazySingleton<NegocioDetalleRepository>(
+    () => NegocioDetalleRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<NegocioDetalleDataSource>(
+    () => SupabaseNegocioDetalleDataSource(sl()),
   );
 }

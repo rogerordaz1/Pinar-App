@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../injection_container.dart' as di;
 import '../shell/main_shell.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -9,7 +11,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../features/negocio_detalle/presentation/pages/negocio_detalle_page.dart';
+import '../../features/negocio_detalle/negocio_detalle.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
@@ -63,9 +65,14 @@ class AppRouter {
       // ── Negocio detail (sin bottom nav) ──────────────────────────────────
       GoRoute(
         path: '/negocio/:id',
-        builder: (_, state) => NegocioDetallePage(
-          negocioId: state.pathParameters['id'] ?? '',
-        ),
+        builder: (_, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return BlocProvider(
+            create: (_) =>
+                di.sl<NegocioDetalleCubit>()..loadNegocio(id),
+            child: NegocioDetallePage(negocioId: id),
+          );
+        },
       ),
 
       // ── Main shell (4 tabs) ──────────────────────────────────────
