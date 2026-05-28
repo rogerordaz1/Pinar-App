@@ -19,19 +19,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   static const _slides = [
     OnboardingSlideData(
-      icon: Icons.map_outlined,
+      assetPath: 'assets/images/onboarding/slide_descubre.png',
       title: 'Explora Pinar del Río',
       description:
           'Mira qué tiendas tienen lo que buscas en el mapa interactivo.',
     ),
     OnboardingSlideData(
-      icon: Icons.storefront_outlined,
+      assetPath: 'assets/images/onboarding/slide_encuentra.png',
       title: 'Encuentra lo que necesitas',
       description:
           'Localiza productos en tiempo real en los negocios de tu barrio.',
     ),
     OnboardingSlideData(
-      icon: Icons.notifications_outlined,
       title: 'Recibe alertas',
       description:
           'Te avisamos al instante cuando llegue el producto que tanto buscas.',
