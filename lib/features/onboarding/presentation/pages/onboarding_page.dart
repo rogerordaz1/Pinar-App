@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -171,38 +173,43 @@ class _EncuentraIllustration extends StatelessWidget {
             ),
           ),
 
-          // Barra de búsqueda — content-sized, anclada abajo a la izquierda
+          // Barra de búsqueda — glass, anclada un poco por encima del borde
           Positioned(
-            bottom: 0,
+            bottom: 20,
             left: 12,
-            child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 12,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.search,
-                      color: AppColors.onSurfaceVariant, size: 18),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'Harina de Trigo',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.onSurfaceVariant,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.35),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      width: 1,
                     ),
                   ),
-                ],
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.search,
+                          color: Colors.white.withValues(alpha: 0.9),
+                          size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Harina de Trigo',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white.withValues(alpha: 0.9),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
