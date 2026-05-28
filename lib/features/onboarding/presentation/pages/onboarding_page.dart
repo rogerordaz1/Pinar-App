@@ -113,44 +113,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
 // ── Ilustración slide 2: imagen con ícono animado y barra de búsqueda ───────
 
-class _EncuentraIllustration extends StatefulWidget {
+class _EncuentraIllustration extends StatelessWidget {
   const _EncuentraIllustration();
-
-  @override
-  State<_EncuentraIllustration> createState() => _EncuentraIllustrationState();
-}
-
-class _EncuentraIllustrationState extends State<_EncuentraIllustration>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
-  late final Animation<Offset> _slideAnim;
-  late final Animation<double> _fadeAnim;
-
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 650),
-    );
-    _slideAnim = Tween<Offset>(
-      begin: const Offset(0, -1.8),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutBack));
-    _fadeAnim = CurvedAnimation(
-      parent: _ctrl,
-      curve: const Interval(0.0, 0.35, curve: Curves.easeIn),
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _ctrl.forward();
-    });
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,43 +138,43 @@ class _EncuentraIllustrationState extends State<_EncuentraIllustration>
             ),
           ),
 
-          // Ícono de bolsa — anima de arriba hacia abajo
+          // Ícono de bolsa — cae de arriba una sola vez
           Positioned(
             top: 0,
             right: 0,
-            child: SlideTransition(
-              position: _slideAnim,
-              child: FadeTransition(
-                opacity: _fadeAnim,
-                child: Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.14),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.shopping_bag,
-                    color: AppColors.primary,
-                    size: 28,
-                  ),
+            child: TweenAnimationBuilder<double>(
+              tween: Tween(begin: -64.0, end: 0.0),
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeOutBack,
+              builder: (_, dy, child) =>
+                  Transform.translate(offset: Offset(0, dy), child: child),
+              child: Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.18),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.shopping_bag,
+                  color: Colors.white,
+                  size: 28,
                 ),
               ),
             ),
           ),
 
-          // Barra de búsqueda flotante en la parte inferior
+          // Barra de búsqueda — content-sized, anclada abajo a la izquierda
           Positioned(
             bottom: 0,
             left: 12,
-            right: 12,
             child: Container(
               padding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -226,17 +190,16 @@ class _EncuentraIllustrationState extends State<_EncuentraIllustration>
                 ],
               ),
               child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.search,
                       color: AppColors.onSurfaceVariant, size: 18),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Harina de Trigo',
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.onSurfaceVariant,
-                      ),
+                  const Text(
+                    'Harina de Trigo',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.onSurfaceVariant,
                     ),
                   ),
                 ],
