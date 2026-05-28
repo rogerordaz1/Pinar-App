@@ -1,64 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/route_names.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../domain/entities/categoria_negocio.dart';
-import '../../domain/entities/producto_popular.dart';
-import '../../domain/entities/promocion.dart';
-import '../cubit/home_cubit.dart';
-import '../cubit/home_state.dart';
-import '../widgets/category_chip.dart';
-import '../widgets/home_header.dart';
-import '../widgets/negocio_card.dart';
-import '../widgets/producto_card.dart';
-import '../widgets/promo_banner.dart';
-import '../widgets/search_bar_tap.dart';
+import '../../../../core/core.dart';
+import '../../home.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<HomeCubit>().loadHome();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        if (state is HomeInitial || state is HomeLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (state is HomeError) {
-          return Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.error_outline, size: 48, color: Colors.grey),
-                const SizedBox(height: 12),
-                Text(state.message),
-                const SizedBox(height: 12),
-                ElevatedButton(
-                  onPressed: () => context.read<HomeCubit>().loadHome(),
-                  child: const Text('Reintentar'),
-                ),
-              ],
-            ),
-          );
-        }
-        if (state is HomeLoaded) {
-          return _HomeContent(state: state);
-        }
-        return const SizedBox.shrink();
-      },
+      builder: (context, state) => state.map(
+        initial: (_) => const Center(child: CircularProgressIndicator()),
+        loading: (_) => const Center(child: CircularProgressIndicator()),
+        loaded: (s) => _HomeContent(state: s),
+        error: (s) => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.error_outline, size: 48, color: Colors.grey),
+              const SizedBox(height: 12),
+              Text(s.message),
+              const SizedBox(height: 12),
+              ElevatedButton(
+                onPressed: () => context.read<HomeCubit>().loadHome(),
+                child: const Text('Reintentar'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

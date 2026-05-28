@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/route_names.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../../../../core/core.dart';
+import '../../auth.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -36,19 +34,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     final theme = Theme.of(context);
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthPasswordResetEmailSent) {
-          context.push(
+        state.maybeMap(
+          passwordResetEmailSent: (_) => context.push(
             RouteNames.verifyOtp,
             extra: _emailController.text.trim(),
-          );
-        } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
-        }
+          ),
+          error: (s) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(s.message), backgroundColor: AppColors.error),
+          ),
+          orElse: () {},
+        );
       },
       child: Scaffold(
         appBar: AppBar(leading: const BackButton()),
@@ -106,10 +101,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 const SizedBox(height: 24),
                 BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
+                    final isLoading = state.maybeMap(
+                      loading: (_) => true,
+                      orElse: () => false,
+                    );
                     return ElevatedButton(
-                      onPressed:
-                          state is AuthLoading ? null : _submit,
-                      child: state is AuthLoading
+                      onPressed: isLoading ? null : _submit,
+                      child: isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
