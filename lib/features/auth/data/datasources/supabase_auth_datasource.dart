@@ -24,7 +24,12 @@ class SupabaseAuthDataSource implements AuthDataSource {
       try {
         return await _fetchUserProfile(response.user!.id);
       } catch (_) {
-        return UserModel(id: response.user!.id, email: response.user!.email ?? email);
+        return UserModel(
+          id: response.user!.id,
+          email: response.user!.email ?? email,
+          nombre: response.user!.userMetadata?['nombre'] as String? ??
+              response.user!.userMetadata?['full_name'] as String?,
+        );
       }
     } on app.AuthException {
       rethrow;
@@ -80,7 +85,12 @@ class SupabaseAuthDataSource implements AuthDataSource {
     try {
       return await _fetchUserProfile(authUser.id);
     } catch (_) {
-      return UserModel(id: authUser.id, email: authUser.email ?? '');
+      return UserModel(
+        id: authUser.id,
+        email: authUser.email ?? '',
+        nombre: authUser.userMetadata?['nombre'] as String? ??
+            authUser.userMetadata?['full_name'] as String?,
+      );
     }
   }
 

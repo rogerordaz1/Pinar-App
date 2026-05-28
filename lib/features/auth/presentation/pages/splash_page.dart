@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/route_names.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../../../../core/core.dart';
+import '../../auth.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -17,18 +15,30 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthCubit>().checkAuth();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    final cubit = context.read<AuthCubit>();
+    final hasSeen = await cubit.hasSeenOnboarding();
+    if (!mounted) return;
+    if (!hasSeen) {
+      context.go(RouteNames.onboarding);
+      return;
+    }
+    cubit.checkAuth();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go(RouteNames.home);
-        } else if (state is AuthUnauthenticated || state is AuthError) {
-          context.go(RouteNames.login);
-        }
+        state.maybeMap(
+          authenticated: (_) => context.go(RouteNames.home),
+          unauthenticated: (_) => context.go(RouteNames.login),
+          error: (_) => context.go(RouteNames.login),
+          orElse: () {},
+        );
       },
       child: const Scaffold(
         backgroundColor: AppColors.primary,

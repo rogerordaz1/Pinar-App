@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../../../../core/usecases/usecase.dart';
+import '../../../../core/utils/credential_storage.dart';
+import '../../../../core/utils/onboarding_service.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
@@ -17,6 +19,8 @@ class AuthCubit extends Cubit<AuthState> {
   final LogoutUseCase logoutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final AuthRepository authRepository;
+  final CredentialStorage credentialStorage;
+  final OnboardingService onboardingService;
 
   StreamSubscription<supabase.AuthState>? _googleAuthSub;
 
@@ -26,7 +30,12 @@ class AuthCubit extends Cubit<AuthState> {
     required this.logoutUseCase,
     required this.getCurrentUserUseCase,
     required this.authRepository,
+    required this.credentialStorage,
+    required this.onboardingService,
   }) : super(const AuthInitial());
+
+  Future<bool> hasSeenOnboarding() => onboardingService.hasSeen();
+  Future<void> markOnboardingSeen() => onboardingService.markSeen();
 
   Future<void> checkAuth() async {
     emit(const AuthLoading());
@@ -34,7 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
     result.fold(
       (_) => emit(const AuthUnauthenticated()),
       (user) => user != null
-          ? emit(AuthAuthenticated(user))
+          ? emit(AuthAuthenticated(user: user))
           : emit(const AuthUnauthenticated()),
     );
   }
@@ -44,10 +53,16 @@ class AuthCubit extends Cubit<AuthState> {
     final result =
         await loginUseCase(LoginParams(email: email, password: password));
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthAuthenticated(user)),
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) {
+        credentialStorage.save(email: email, password: password);
+        emit(AuthAuthenticated(user: user));
+      },
     );
   }
+
+  Future<({String email, String password})?> getSavedCredentials() =>
+      credentialStorage.load();
 
   Future<void> register({
     required String email,
@@ -58,8 +73,8 @@ class AuthCubit extends Cubit<AuthState> {
     final result = await registerUseCase(
         RegisterParams(email: email, password: password, fullName: fullName));
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
-      (user) => emit(AuthAuthenticated(user)),
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) => emit(AuthAuthenticated(user: user)),
     );
   }
 
@@ -67,7 +82,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthLoading());
     final result = await logoutUseCase(const NoParams());
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) => emit(AuthError(message: failure.message)),
       (_) => emit(const AuthUnauthenticated()),
     );
   }
@@ -84,7 +99,7 @@ class AuthCubit extends Cubit<AuthState> {
         _googleAuthSub?.cancel();
         _googleAuthSub = null;
         final u = data.session!.user;
-        emit(AuthAuthenticated(UserEntity(
+        emit(AuthAuthenticated(user: UserEntity(
           id: u.id,
           email: u.email ?? '',
           nombre: u.userMetadata?['full_name'] as String?,
@@ -102,7 +117,7 @@ class AuthCubit extends Cubit<AuthState> {
       (failure) {
         _googleAuthSub?.cancel();
         _googleAuthSub = null;
-        emit(AuthError(failure.message));
+        emit(AuthError(message: failure.message));
       },
       (_) {
         // Browser abierto — _googleAuthSub maneja el resultado
@@ -114,7 +129,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(const AuthLoading());
     final result = await authRepository.forgotPassword(email: email);
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) => emit(AuthError(message: failure.message)),
       (_) => emit(const AuthPasswordResetEmailSent()),
     );
   }
@@ -127,7 +142,7 @@ class AuthCubit extends Cubit<AuthState> {
     final result =
         await authRepository.verifyResetOtp(email: email, token: token);
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) => emit(AuthError(message: failure.message)),
       (_) => emit(const AuthOtpVerified()),
     );
   }
@@ -137,7 +152,7 @@ class AuthCubit extends Cubit<AuthState> {
     final result =
         await authRepository.resetPassword(newPassword: newPassword);
     result.fold(
-      (failure) => emit(AuthError(failure.message)),
+      (failure) => emit(AuthError(message: failure.message)),
       (_) => emit(const AuthPasswordResetSuccess()),
     );
   }

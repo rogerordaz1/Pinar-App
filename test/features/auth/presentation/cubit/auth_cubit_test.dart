@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:cubamap/core/errors/failures.dart';
 import 'package:cubamap/core/usecases/usecase.dart';
+import 'package:cubamap/core/utils/credential_storage.dart';
+import 'package:cubamap/core/utils/onboarding_service.dart';
 import 'package:cubamap/features/auth/domain/entities/user_entity.dart';
 import 'package:cubamap/features/auth/domain/repositories/auth_repository.dart';
 import 'package:cubamap/features/auth/domain/usecases/get_current_user_usecase.dart';
@@ -23,6 +25,10 @@ class MockGetCurrentUserUseCase extends Mock implements GetCurrentUserUseCase {}
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
+class MockCredentialStorage extends Mock implements CredentialStorage {}
+
+class MockOnboardingService extends Mock implements OnboardingService {}
+
 void main() {
   late AuthCubit cubit;
   late MockLoginUseCase mockLogin;
@@ -30,6 +36,8 @@ void main() {
   late MockLogoutUseCase mockLogout;
   late MockGetCurrentUserUseCase mockGetCurrentUser;
   late MockAuthRepository mockAuthRepository;
+  late MockCredentialStorage mockCredentialStorage;
+  late MockOnboardingService mockOnboardingService;
 
   const tUser = UserEntity(id: 'uid-1', email: 'test@test.com');
 
@@ -39,12 +47,18 @@ void main() {
     mockLogout = MockLogoutUseCase();
     mockGetCurrentUser = MockGetCurrentUserUseCase();
     mockAuthRepository = MockAuthRepository();
+    mockCredentialStorage = MockCredentialStorage();
+    mockOnboardingService = MockOnboardingService();
+    when(() => mockCredentialStorage.save(email: any(named: 'email'), password: any(named: 'password')))
+        .thenAnswer((_) async {});
     cubit = AuthCubit(
       loginUseCase: mockLogin,
       registerUseCase: mockRegister,
       logoutUseCase: mockLogout,
       getCurrentUserUseCase: mockGetCurrentUser,
       authRepository: mockAuthRepository,
+      credentialStorage: mockCredentialStorage,
+      onboardingService: mockOnboardingService,
     );
     registerFallbackValue(const LoginParams(email: '', password: ''));
     registerFallbackValue(const RegisterParams(email: '', password: ''));
@@ -66,7 +80,7 @@ void main() {
         return cubit;
       },
       act: (c) => c.checkAuth(),
-      expect: () => [const AuthLoading(), const AuthAuthenticated(tUser)],
+      expect: () => [const AuthLoading(), const AuthAuthenticated(user: tUser)],
     );
 
     blocTest<AuthCubit, AuthState>(
@@ -90,7 +104,7 @@ void main() {
         return cubit;
       },
       act: (c) => c.login(email: 'test@test.com', password: 'pass123'),
-      expect: () => [const AuthLoading(), const AuthAuthenticated(tUser)],
+      expect: () => [const AuthLoading(), const AuthAuthenticated(user: tUser)],
     );
 
     blocTest<AuthCubit, AuthState>(
@@ -102,7 +116,7 @@ void main() {
       },
       act: (c) => c.login(email: 'x@x.com', password: 'wrong'),
       expect: () =>
-          [const AuthLoading(), const AuthError('Credenciales inválidas')],
+          [const AuthLoading(), const AuthError(message: 'Credenciales inválidas')],
     );
   });
 
@@ -115,7 +129,7 @@ void main() {
         return cubit;
       },
       act: (c) => c.register(email: 'nuevo@test.com', password: 'pass123'),
-      expect: () => [const AuthLoading(), const AuthAuthenticated(tUser)],
+      expect: () => [const AuthLoading(), const AuthAuthenticated(user: tUser)],
     );
   });
 
@@ -157,7 +171,7 @@ void main() {
       },
       act: (c) => c.forgotPassword(email: 'noexiste@test.com'),
       expect: () =>
-          [const AuthLoading(), const AuthError('Correo no encontrado')],
+          [const AuthLoading(), const AuthError(message: 'Correo no encontrado')],
     );
   });
 
@@ -189,7 +203,7 @@ void main() {
       act: (c) =>
           c.verifyResetOtp(email: 'test@test.com', token: '000000'),
       expect: () =>
-          [const AuthLoading(), const AuthError('Código inválido')],
+          [const AuthLoading(), const AuthError(message: 'Código inválido')],
     );
   });
 
@@ -218,7 +232,7 @@ void main() {
       },
       act: (c) => c.resetPassword(newPassword: 'NuevaPass123'),
       expect: () =>
-          [const AuthLoading(), const AuthError('Sesión expirada')],
+          [const AuthLoading(), const AuthError(message: 'Sesión expirada')],
     );
   });
 }

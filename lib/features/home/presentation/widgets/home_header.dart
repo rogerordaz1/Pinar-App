@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../auth/presentation/cubit/auth_cubit.dart';
-import '../../../auth/presentation/cubit/auth_state.dart';
+import '../../../../core/core.dart';
+import '../../../auth/auth.dart';
 
 class HomeHeader extends StatelessWidget {
   final int tiendasAbiertas;
@@ -19,13 +17,12 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final nombre = context.select<AuthCubit, String>((cubit) {
-      final state = cubit.state;
-      if (state is AuthAuthenticated) {
-        return state.user.nombre?.split(' ').first ?? 'Usuario';
-      }
-      return 'Usuario';
-    });
+    final nombre = context.select<AuthCubit, String>(
+      (cubit) => cubit.state.maybeMap(
+        authenticated: (s) => s.user.nombre?.split(' ').first ?? 'Usuario',
+        orElse: () => 'Usuario',
+      ),
+    );
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 8, 8),
@@ -54,11 +51,6 @@ class HomeHeader extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: null,
-            tooltip: 'Notificaciones',
           ),
         ],
       ),

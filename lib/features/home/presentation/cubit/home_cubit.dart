@@ -51,7 +51,7 @@ class HomeCubit extends Cubit<HomeState> {
     productosEither.fold((f) => errorMessage ??= f.message, (_) {});
 
     if (errorMessage != null) {
-      emit(HomeError(errorMessage!));
+      emit(HomeError(message: errorMessage!));
       return;
     }
 

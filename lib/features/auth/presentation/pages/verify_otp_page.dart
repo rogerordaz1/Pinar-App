@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/route_names.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../../../../core/core.dart';
+import '../../auth.dart';
 
 class VerifyOtpPage extends StatefulWidget {
   final String email;
@@ -55,21 +53,17 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
     final theme = Theme.of(context);
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthOtpVerified) {
-          context.go(RouteNames.resetPassword);
-        } else if (state is AuthPasswordResetEmailSent) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Código reenviado. Revisa tu correo.')),
-          );
-        } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
-        }
+        state.maybeMap(
+          otpVerified: (_) => context.go(RouteNames.resetPassword),
+          passwordResetEmailSent: (_) =>
+              ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Código reenviado. Revisa tu correo.')),
+          ),
+          error: (s) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(s.message), backgroundColor: AppColors.error),
+          ),
+          orElse: () {},
+        );
       },
       child: Scaffold(
         appBar: AppBar(leading: const BackButton()),
@@ -135,7 +129,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                             padding: EdgeInsets.only(
                                 right: i < _length - 1 ? 8 : 0),
                             child:
-                                _OtpBox(char: char, isCurrent: isCurrent),
+                                OtpBox(char: char, isCurrent: isCurrent),
                           );
                         }),
                       ),
@@ -165,11 +159,14 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                 const SizedBox(height: 40),
                 BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
+                    final isLoading = state.maybeMap(
+                      loading: (_) => true,
+                      orElse: () => false,
+                    );
                     final ready = _otp.length == _length;
                     return ElevatedButton(
-                      onPressed:
-                          (state is AuthLoading || !ready) ? null : _submit,
-                      child: state is AuthLoading
+                      onPressed: (isLoading || !ready) ? null : _submit,
+                      child: isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,
@@ -190,9 +187,12 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                         style: theme.textTheme.bodyMedium),
                     BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, state) {
+                        final isLoading = state.maybeMap(
+                          loading: (_) => true,
+                          orElse: () => false,
+                        );
                         return TextButton(
-                          onPressed:
-                              state is AuthLoading ? null : _resend,
+                          onPressed: isLoading ? null : _resend,
                           child: const Text('Reenviar'),
                         );
                       },
@@ -215,36 +215,3 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   }
 }
 
-class _OtpBox extends StatelessWidget {
-  final String char;
-  final bool isCurrent;
-
-  const _OtpBox({required this.char, required this.isCurrent});
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      width: 36,
-      height: 50,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isCurrent ? AppColors.primary : AppColors.outlineVariant,
-          width: isCurrent ? 2 : 1,
-        ),
-        borderRadius: BorderRadius.circular(12),
-        color: char.isNotEmpty
-            ? AppColors.onPrimaryContainer
-            : Colors.transparent,
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        char,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
-      ),
-    );
-  }
-}

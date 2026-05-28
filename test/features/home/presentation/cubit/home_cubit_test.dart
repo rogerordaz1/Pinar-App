@@ -129,7 +129,7 @@ void main() {
       act: (cubit) => cubit.loadHome(),
       expect: () => [
         isA<HomeLoading>(),
-        const HomeError('Error de servidor'),
+        const HomeError(message: 'Error de servidor'),
       ],
     );
 
@@ -149,7 +149,7 @@ void main() {
       act: (cubit) => cubit.loadHome(),
       expect: () => [
         isA<HomeLoading>(),
-        const HomeError('Error categorías'),
+        const HomeError(message: 'Error categorías'),
       ],
     );
   });

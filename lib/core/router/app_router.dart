@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../injection_container.dart' as di;
 import '../shell/main_shell.dart';
-import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
-import '../../features/home/presentation/cubit/home_cubit.dart';
+import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
-import '../../injection_container.dart';
+import '../../features/negocio_detalle/negocio_detalle.dart';
+import '../../features/busqueda/busqueda.dart';
+import '../../features/categoria_productos/categoria_productos.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
 class _PlaceholderPage extends StatelessWidget {
@@ -20,11 +23,8 @@ class _PlaceholderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(name)),
-      body: Center(
-        child: Text(name, style: Theme.of(context).textTheme.titleLarge),
-      ),
+    return Center(
+      child: Text(name, style: Theme.of(context).textTheme.titleLarge),
     );
   }
 }
@@ -37,72 +37,71 @@ class AppRouter {
       // ── Auth routes (outside shell) ──────────────────────────────
       GoRoute(
         path: RouteNames.splash,
-        builder: (_, __) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: const SplashPage(),
-        ),
+        builder: (_, __) => const SplashPage(),
+      ),
+      GoRoute(
+        path: RouteNames.onboarding,
+        builder: (_, __) => const OnboardingPage(),
       ),
       GoRoute(
         path: RouteNames.login,
-        builder: (_, __) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: const LoginPage(),
-        ),
+        builder: (_, __) => const LoginPage(),
       ),
       GoRoute(
         path: RouteNames.register,
-        builder: (_, __) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: const RegisterPage(),
-        ),
+        builder: (_, __) => const RegisterPage(),
       ),
       GoRoute(
         path: RouteNames.forgotPassword,
-        builder: (_, __) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: const ForgotPasswordPage(),
-        ),
+        builder: (_, __) => const ForgotPasswordPage(),
       ),
       GoRoute(
         path: RouteNames.verifyOtp,
-        builder: (_, state) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: VerifyOtpPage(email: state.extra as String),
-        ),
+        builder: (_, state) => VerifyOtpPage(email: state.extra as String),
       ),
       GoRoute(
         path: RouteNames.resetPassword,
-        builder: (_, __) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: const ResetPasswordPage(),
-        ),
+        builder: (_, __) => const ResetPasswordPage(),
       ),
 
-      // ── Negocio detail (sin bottom nav — se implementa en feature busqueda) ──
+      // ── Categoria productos (sin bottom nav) ─────────────────────────────
+      GoRoute(
+        path: '/categoria/:id',
+        builder: (_, state) {
+          final categoriaId = state.pathParameters['id'] ?? '';
+          final nombre = state.extra as String? ?? 'Categoría';
+          return BlocProvider(
+            create: (_) => di.sl<CategoriaProductosCubit>()
+              ..loadProductos(categoriaId, nombre),
+            child: CategoriaProductosPage(categoriaNombre: nombre),
+          );
+        },
+      ),
+
+      // ── Negocio detail (sin bottom nav) ──────────────────────────────────
       GoRoute(
         path: '/negocio/:id',
-        builder: (context, state) {
+        builder: (_, state) {
           final id = state.pathParameters['id'] ?? '';
-          return _PlaceholderPage('Negocio $id');
+          return BlocProvider(
+            create: (_) =>
+                di.sl<NegocioDetalleCubit>()..loadNegocio(id),
+            child: NegocioDetallePage(negocioId: id),
+          );
         },
       ),
 
       // ── Main shell (4 tabs) ──────────────────────────────────────
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: MainShell(navigationShell: navigationShell),
-        ),
+        builder: (context, state, navigationShell) =>
+            MainShell(navigationShell: navigationShell),
         branches: [
           // Tab 0: Inicio
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: RouteNames.home,
-                builder: (context, state) => BlocProvider(
-                  create: (_) => sl<HomeCubit>(),
-                  child: const HomePage(),
-                ),
+                builder: (_, __) => const HomePage(),
               ),
             ],
           ),
@@ -112,7 +111,7 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RouteNames.busqueda,
-                builder: (_, __) => const _PlaceholderPage('Buscar'),
+                builder: (_, __) => const BusquedaPage(),
               ),
             ],
           ),
@@ -132,7 +131,7 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RouteNames.perfil,
-                builder: (_, __) => const _PlaceholderPage('Perfil'),
+                builder: (_, __) => const ProfilePage(),
               ),
             ],
           ),
