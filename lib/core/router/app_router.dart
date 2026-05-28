@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../injection_container.dart' as di;
 import '../shell/main_shell.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -9,6 +11,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/negocio_detalle/negocio_detalle.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
@@ -18,11 +21,8 @@ class _PlaceholderPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(name)),
-      body: Center(
-        child: Text(name, style: Theme.of(context).textTheme.titleLarge),
-      ),
+    return Center(
+      child: Text(name, style: Theme.of(context).textTheme.titleLarge),
     );
   }
 }
@@ -62,12 +62,16 @@ class AppRouter {
         builder: (_, __) => const ResetPasswordPage(),
       ),
 
-      // ── Negocio detail (sin bottom nav — se implementa en feature busqueda) ──
+      // ── Negocio detail (sin bottom nav) ──────────────────────────────────
       GoRoute(
         path: '/negocio/:id',
-        builder: (context, state) {
+        builder: (_, state) {
           final id = state.pathParameters['id'] ?? '';
-          return _PlaceholderPage('Negocio $id');
+          return BlocProvider(
+            create: (_) =>
+                di.sl<NegocioDetalleCubit>()..loadNegocio(id),
+            child: NegocioDetallePage(negocioId: id),
+          );
         },
       ),
 

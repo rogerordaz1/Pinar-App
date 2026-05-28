@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../router/route_names.dart';
+import '../theme/app_colors.dart';
 import '../utils/exit_dialog.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
 import '../../features/auth/presentation/cubit/auth_state.dart';
@@ -49,6 +50,49 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
         );
       },
       child: Scaffold(
+        backgroundColor: AppColors.surface,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: AppColors.surfaceContainerLowest,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          title: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(
+                  Icons.storefront_outlined,
+                  color: AppColors.primary,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                'Pinar Market',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 20,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: AppColors.primary,
+              ),
+              onPressed: () {},
+              tooltip: 'Notificaciones',
+            ),
+            const SizedBox(width: 4),
+          ],
+        ),
         body: widget.navigationShell,
         bottomNavigationBar: NavigationBar(
           selectedIndex: widget.navigationShell.currentIndex,

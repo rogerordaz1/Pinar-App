@@ -28,9 +28,7 @@ class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tiendasAbiertas = negocios.where((n) => n.abierto).length;
-    return SafeArea(
-      bottom: false,
-      child: CustomScrollView(
+    return CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
             child: HomeHeader(tiendasAbiertas: tiendasAbiertas),
@@ -59,7 +57,6 @@ class HomeContent extends StatelessWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 24)),
         ],
-      ),
-    );
+      );
   }
 }
