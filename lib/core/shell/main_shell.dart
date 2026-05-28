@@ -43,9 +43,10 @@ class _MainShellState extends State<MainShell> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthUnauthenticated) {
-          context.go(RouteNames.login);
-        }
+        state.maybeMap(
+          unauthenticated: (_) => context.go(RouteNames.login),
+          orElse: () {},
+        );
       },
       child: Scaffold(
         body: widget.navigationShell,

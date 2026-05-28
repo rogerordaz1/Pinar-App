@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/route_names.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../../../../core/core.dart';
+import '../../auth.dart';
 
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({super.key});
@@ -59,16 +57,14 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       },
       child: BlocListener<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthPasswordResetSuccess) {
-            setState(() => _success = true);
-          } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
+          state.maybeMap(
+            passwordResetSuccess: (_) => setState(() => _success = true),
+            error: (s) => ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppColors.error,
-              ),
-            );
-          }
+                  content: Text(s.message), backgroundColor: AppColors.error),
+            ),
+            orElse: () {},
+          );
         },
         child: Scaffold(
         appBar: AppBar(
@@ -183,10 +179,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 const SizedBox(height: 32),
                 BlocBuilder<AuthCubit, AuthState>(
                   builder: (context, state) {
+                    final isLoading = state.maybeMap(
+                      loading: (_) => true,
+                      orElse: () => false,
+                    );
                     return ElevatedButton(
-                      onPressed:
-                          (state is AuthLoading || _success) ? null : _submit,
-                      child: state is AuthLoading
+                      onPressed: (isLoading || _success) ? null : _submit,
+                      child: isLoading
                           ? const SizedBox(
                               height: 20,
                               width: 20,

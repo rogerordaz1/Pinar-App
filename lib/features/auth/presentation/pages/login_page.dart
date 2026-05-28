@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/route_names.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/exit_dialog.dart';
-import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
+import '../../../../core/core.dart';
+import '../../auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,6 +17,18 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final creds = await context.read<AuthCubit>().getSavedCredentials();
+      if (creds != null && mounted) {
+        _emailController.text = creds.email;
+        _passwordController.text = creds.password;
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -42,16 +51,13 @@ class _LoginPageState extends State<LoginPage> {
     final theme = Theme.of(context);
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go(RouteNames.home);
-        } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppColors.error,
-            ),
-          );
-        }
+        state.maybeMap(
+          authenticated: (_) => context.go(RouteNames.home),
+          error: (s) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(s.message), backgroundColor: AppColors.error),
+          ),
+          orElse: () {},
+        );
       },
       child: PopScope(
         canPop: false,
@@ -142,9 +148,13 @@ class _LoginPageState extends State<LoginPage> {
                   // Botón iniciar sesión
                   BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
+                      final isLoading = state.maybeMap(
+                        loading: (_) => true,
+                        orElse: () => false,
+                      );
                       return ElevatedButton(
-                        onPressed: state is AuthLoading ? null : _submit,
-                        child: state is AuthLoading
+                        onPressed: isLoading ? null : _submit,
+                        child: isLoading
                             ? const SizedBox(
                                 height: 20,
                                 width: 20,
@@ -174,8 +184,12 @@ class _LoginPageState extends State<LoginPage> {
                   // Google
                   BlocBuilder<AuthCubit, AuthState>(
                     builder: (context, state) {
+                      final isLoading = state.maybeMap(
+                        loading: (_) => true,
+                        orElse: () => false,
+                      );
                       return OutlinedButton(
-                        onPressed: state is AuthLoading
+                        onPressed: isLoading
                             ? null
                             : () => context.read<AuthCubit>().loginWithGoogle(),
                         child: Row(
@@ -184,9 +198,7 @@ class _LoginPageState extends State<LoginPage> {
                             FaIcon(
                               FontAwesomeIcons.google,
                               size: 18,
-                              color: state is AuthLoading
-                                  ? null
-                                  : const Color(0xFF4285F4),
+                              color: isLoading ? null : const Color(0xFF4285F4),
                             ),
                             const SizedBox(width: 12),
                             const Text('Continuar con Google'),
