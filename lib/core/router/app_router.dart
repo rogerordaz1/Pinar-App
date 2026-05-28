@@ -9,6 +9,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
 class _PlaceholderPage extends StatelessWidget {
@@ -35,6 +36,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.splash,
         builder: (_, __) => const SplashPage(),
+      ),
+      GoRoute(
+        path: RouteNames.onboarding,
+        builder: (_, __) => const OnboardingPage(),
       ),
       GoRoute(
         path: RouteNames.login,

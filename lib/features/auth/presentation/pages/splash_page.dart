@@ -15,7 +15,18 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    context.read<AuthCubit>().checkAuth();
+    _initialize();
+  }
+
+  Future<void> _initialize() async {
+    final cubit = context.read<AuthCubit>();
+    final hasSeen = await cubit.hasSeenOnboarding();
+    if (!mounted) return;
+    if (!hasSeen) {
+      context.go(RouteNames.onboarding);
+      return;
+    }
+    cubit.checkAuth();
   }
 
   @override
