@@ -52,12 +52,55 @@ class NegocioDetallePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final top = MediaQuery.of(context).padding.top;
     final bottom = MediaQuery.of(context).padding.bottom;
     const negocio = _mock;
 
     return Scaffold(
       backgroundColor: AppColors.surface,
+      appBar: AppBar(
+        backgroundColor: AppColors.surfaceContainerLowest,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
+          onPressed: () => context.pop(),
+        ),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: AppColors.primary.withValues(alpha: 0.12),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(
+                Icons.storefront_outlined,
+                color: AppColors.primary,
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Pinar Market',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.w700,
+                fontSize: 20,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: AppColors.primary,
+            ),
+            onPressed: () {},
+          ),
+          const SizedBox(width: 4),
+        ],
+      ),
       body: Stack(
         children: [
           // Hero image (behind scroll)
@@ -105,12 +148,6 @@ class NegocioDetallePage extends StatelessWidget {
               ],
             ),
           ),
-          // Back button (always on top)
-          Positioned(
-            top: top + 8,
-            left: 8,
-            child: const _BackButton(),
-          ),
         ],
       ),
     );
@@ -142,28 +179,6 @@ class _HeroBackground extends StatelessWidget {
       ),
       child: const Center(
         child: Icon(Icons.grass, color: Colors.white54, size: 80),
-      ),
-    );
-  }
-}
-
-// ── Back Button ──────────────────────────────────────────────────────────────
-
-class _BackButton extends StatelessWidget {
-  const _BackButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => context.pop(),
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: Colors.black.withValues(alpha: 0.35),
-          shape: BoxShape.circle,
-        ),
-        child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
       ),
     );
   }
