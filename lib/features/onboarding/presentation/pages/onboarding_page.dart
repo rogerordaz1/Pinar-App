@@ -229,78 +229,99 @@ class _AlertasIllustration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 242,
+      height: 280,
       child: Stack(
         clipBehavior: Clip.none,
         alignment: Alignment.center,
         children: [
           // Teléfono
           Container(
-            width: 140,
-            height: 220,
+            width: 175,
+            height: 270,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(28),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
-                  blurRadius: 20,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              borderRadius: BorderRadius.circular(36),
+              border: Border.all(color: Colors.black87, width: 2.5),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 40),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 14),
+                // Dynamic Island / notch
                 Container(
-                  height: 8,
+                  width: 52,
+                  height: 13,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.black87,
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Container(
-                  height: 8,
-                  width: 64,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(4),
+                const SizedBox(height: 22),
+                // Filas de contenido
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        height: 10,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Burbuja de mensaje
+                      Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: AppColors.surfaceContainerHigh,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
 
-          // Campana — círculo verde, esquina superior derecha del teléfono
+          // Círculo gris con campana — superpuesto al lado derecho del teléfono
           Positioned(
-            top: 10,
-            right: 40,
+            right: 20,
+            top: 60,
             child: Container(
-              width: 48,
-              height: 48,
+              width: 76,
+              height: 76,
               decoration: const BoxDecoration(
-                color: AppColors.primary,
+                color: AppColors.surfaceContainerHighest,
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.notifications_active,
-                color: Colors.white,
-                size: 26,
+                color: AppColors.primary,
+                size: 38,
               ),
             ),
           ),
 
-          // Chip "¡Aceite llegó!" — izquierda, a la altura media del teléfono
+          // Chip "¡Aceite llegó!" azul — superpuesto al lado izquierdo
           Positioned(
-            left: 16,
-            top: 88,
+            left: 12,
+            top: 120,
             child: Container(
               padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: AppColors.secondary,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
@@ -315,7 +336,7 @@ class _AlertasIllustration extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
