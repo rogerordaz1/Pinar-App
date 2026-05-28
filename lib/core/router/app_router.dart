@@ -9,6 +9,7 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/negocio_detalle/presentation/pages/negocio_detalle_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
@@ -62,13 +63,12 @@ class AppRouter {
         builder: (_, __) => const ResetPasswordPage(),
       ),
 
-      // ── Negocio detail (sin bottom nav — se implementa en feature busqueda) ──
+      // ── Negocio detail (sin bottom nav) ──────────────────────────────────
       GoRoute(
         path: '/negocio/:id',
-        builder: (context, state) {
-          final id = state.pathParameters['id'] ?? '';
-          return _PlaceholderPage('Negocio $id');
-        },
+        builder: (_, state) => NegocioDetallePage(
+          negocioId: state.pathParameters['id'] ?? '',
+        ),
       ),
 
       // ── Main shell (4 tabs) ──────────────────────────────────────
