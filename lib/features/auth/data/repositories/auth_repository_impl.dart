@@ -3,6 +3,7 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
+import '../../domain/usecases/update_profile_usecase.dart';
 import '../datasources/auth_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -120,6 +121,19 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Right(null);
     } on AuthException catch (e) {
       return Left(AuthFailure(e.message));
+    } catch (e) {
+      return Left(ServerFailure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> updateProfile(
+      UpdateProfileParams params) async {
+    try {
+      final model = await dataSource.updateProfile(params);
+      return Right(model.toEntity());
+    } on ServerException catch (e) {
+      return Left(ServerFailure(e.message));
     } catch (e) {
       return Left(ServerFailure(e.toString()));
     }
