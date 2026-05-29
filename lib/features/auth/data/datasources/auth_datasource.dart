@@ -1,3 +1,4 @@
+import '../../domain/usecases/update_profile_usecase.dart';
 import '../models/user_model.dart';
 
 abstract class AuthDataSource {
@@ -13,4 +14,5 @@ abstract class AuthDataSource {
   Future<void> forgotPassword({required String email});
   Future<void> verifyResetOtp({required String email, required String token});
   Future<void> resetPassword({required String newPassword});
+  Future<UserModel> updateProfile(UpdateProfileParams params);
 }
