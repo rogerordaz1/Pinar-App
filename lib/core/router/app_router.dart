@@ -14,6 +14,7 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/negocio_detalle/negocio_detalle.dart';
 import '../../features/busqueda/busqueda.dart';
 import '../../features/categoria_productos/categoria_productos.dart';
+import '../../features/favoritos/favoritos.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
@@ -121,7 +122,10 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RouteNames.favoritos,
-                builder: (_, __) => const _PlaceholderPage('Favoritos'),
+                builder: (_, state) {
+                  final tab = (state.extra as int?) ?? 0;
+                  return FavoritosPage(initialTabIndex: tab);
+                },
               ),
             ],
           ),
