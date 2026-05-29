@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
 import '../../negocio_detalle.dart';
+import '../../../favoritos/favoritos.dart';
 
 class NegocioDetallePage extends StatelessWidget {
   final String negocioId;
@@ -49,6 +50,22 @@ class NegocioDetallePage extends StatelessWidget {
           ],
         ),
         actions: [
+          BlocBuilder<NegociosFavoritosCubit, NegociosFavoritosState>(
+            builder: (context, _) {
+              final isFav = context
+                  .read<NegociosFavoritosCubit>()
+                  .isFavorito(negocioId);
+              return IconButton(
+                icon: Icon(
+                  isFav ? Icons.favorite : Icons.favorite_border,
+                  color: isFav ? AppColors.error : AppColors.primary,
+                ),
+                onPressed: () => context
+                    .read<NegociosFavoritosCubit>()
+                    .toggleFavorito(negocioId),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.notifications_outlined, color: AppColors.primary),
             onPressed: () {},
