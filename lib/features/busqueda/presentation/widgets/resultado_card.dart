@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
 import '../../domain/entities/resultado_busqueda.dart';
+import '../../../favoritos/favoritos.dart';
 
 class ResultadoCard extends StatelessWidget {
   final ResultadoBusqueda resultado;
@@ -74,8 +76,23 @@ class ResultadoCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 4),
-            Icon(Icons.favorite_border,
-                size: 18, color: AppColors.outline),
+            BlocBuilder<ProductosFavoritosCubit, ProductosFavoritosState>(
+              builder: (context, state) {
+                final isFav = context
+                    .read<ProductosFavoritosCubit>()
+                    .isFavorito(resultado.productoId);
+                return GestureDetector(
+                  onTap: () => context
+                      .read<ProductosFavoritosCubit>()
+                      .toggleFavorito(resultado.productoId, resultado.negocioId),
+                  child: Icon(
+                    isFav ? Icons.favorite : Icons.favorite_border,
+                    size: 18,
+                    color: isFav ? AppColors.error : AppColors.outline,
+                  ),
+                );
+              },
+            ),
           ],
         ),
         const SizedBox(height: 2),
