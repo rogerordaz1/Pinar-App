@@ -3,7 +3,7 @@
 create table public.negocios_favoritos (
   id         uuid primary key default gen_random_uuid(),
   user_id    uuid not null references auth.users(id) on delete cascade,
-  negocio_id uuid not null,
+  negocio_id uuid not null references public.negocios(id) on delete cascade,
   created_at timestamptz default now(),
   unique (user_id, negocio_id)
 );
@@ -14,8 +14,8 @@ create policy "usuario ve sus favoritos" on public.negocios_favoritos
 create table public.productos_favoritos (
   id          uuid primary key default gen_random_uuid(),
   user_id     uuid not null references auth.users(id) on delete cascade,
-  producto_id uuid not null,
-  negocio_id  uuid not null,
+  producto_id uuid not null references public.productos(id) on delete cascade,
+  negocio_id  uuid not null references public.negocios(id) on delete cascade,
   created_at  timestamptz default now(),
   unique (user_id, producto_id)
 );

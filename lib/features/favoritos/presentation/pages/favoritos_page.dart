@@ -18,37 +18,9 @@ class FavoritosPage extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       initialIndex: initialTabIndex,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.surfaceContainerLowest,
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          title: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: const Icon(
-                  Icons.storefront_outlined,
-                  color: AppColors.primary,
-                  size: 18,
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Text(
-                'Pinar Market',
-                style: TextStyle(
-                  color: AppColors.primary,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-          bottom: const TabBar(
+      child: Column(
+        children: [
+          const TabBar(
             labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.outline,
             indicatorColor: AppColors.primary,
@@ -57,13 +29,15 @@ class FavoritosPage extends StatelessWidget {
               Tab(text: 'Productos'),
             ],
           ),
-        ),
-        body: const TabBarView(
-          children: [
-            _NegociosTab(),
-            _ProductosTab(),
-          ],
-        ),
+          const Expanded(
+            child: TabBarView(
+              children: [
+                _NegociosTab(),
+                _ProductosTab(),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
