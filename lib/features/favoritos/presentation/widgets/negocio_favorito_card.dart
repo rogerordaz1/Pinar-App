@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
-import '../../domain/entities/resultado_busqueda.dart';
-import '../../../favoritos/favoritos.dart';
+import '../../domain/entities/negocio_favorito.dart';
+import '../cubit/negocios_favoritos_cubit.dart';
 
-class ResultadoCard extends StatelessWidget {
-  final ResultadoBusqueda resultado;
+class NegocioFavoritoCard extends StatelessWidget {
+  final NegocioFavorito favorito;
 
-  const ResultadoCard({super.key, required this.resultado});
+  const NegocioFavoritoCard({super.key, required this.favorito});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +30,11 @@ class ResultadoCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    if (resultado.logoUrl != null) {
+    if (favorito.logoUrl != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(8),
         child: CachedNetworkImage(
-          imageUrl: resultado.logoUrl!,
+          imageUrl: favorito.logoUrl!,
           width: 72,
           height: 72,
           fit: BoxFit.cover,
@@ -68,100 +68,47 @@ class ResultadoCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                resultado.productoNombre,
+                favorito.negocioNombre,
                 style: AppTextStyles.body
                     .copyWith(fontWeight: FontWeight.w600),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            const SizedBox(width: 4),
-            BlocBuilder<ProductosFavoritosCubit, ProductosFavoritosState>(
-              builder: (context, state) {
-                final isFav = context
-                    .read<ProductosFavoritosCubit>()
-                    .isFavorito(resultado.productoId);
-                return GestureDetector(
-                  onTap: () => context
-                      .read<ProductosFavoritosCubit>()
-                      .toggleFavorito(resultado.productoId, resultado.negocioId),
-                  child: Icon(
-                    isFav ? Icons.favorite : Icons.favorite_border,
-                    size: 18,
-                    color: isFav ? AppColors.error : AppColors.outline,
-                  ),
-                );
-              },
+            GestureDetector(
+              onTap: () => context
+                  .read<NegociosFavoritosCubit>()
+                  .toggleFavorito(favorito.negocioId),
+              child: const Icon(Icons.favorite, size: 20, color: AppColors.error),
             ),
-          ],
-        ),
-        const SizedBox(height: 2),
-        Row(
-          children: [
-            Flexible(
-              child: Text(
-                resultado.negocioNombre,
-                style: AppTextStyles.caption
-                    .copyWith(color: AppColors.onSurface),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            if (resultado.negocioVerificado) ...[
-              const SizedBox(width: 3),
-              Icon(Icons.verified, size: 13, color: AppColors.secondary),
-            ],
           ],
         ),
         const SizedBox(height: 4),
         Row(
           children: [
-            _OpenBadge(abierto: resultado.negocioAbierto),
-            const SizedBox(width: 6),
-            Text(
-              '${(resultado.distanciaMetros / 1000).toStringAsFixed(1)} km',
-              style: AppTextStyles.caption,
-            ),
-            if (resultado.calificacion > 0) ...[
+            _OpenBadge(abierto: favorito.negocioAbierto),
+            if (favorito.calificacion > 0) ...[
               const SizedBox(width: 6),
-              Icon(Icons.star_rounded,
-                  size: 12, color: AppColors.warning),
+              const Icon(Icons.star_rounded, size: 12, color: AppColors.warning),
               Text(
-                resultado.calificacion.toStringAsFixed(1),
-                style: AppTextStyles.caption.copyWith(
-                    fontWeight: FontWeight.w600),
+                favorito.calificacion.toStringAsFixed(1),
+                style: AppTextStyles.caption
+                    .copyWith(fontWeight: FontWeight.w600),
               ),
             ],
-          ],
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: [
-            Text(
-              'CUP ${resultado.precio.toStringAsFixed(0)}',
-              style: AppTextStyles.body.copyWith(
-                fontWeight: FontWeight.w700,
-                color: AppColors.primary,
-              ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              resultado.actualizadoHace,
-              style: AppTextStyles.caption,
-            ),
           ],
         ),
         const SizedBox(height: 6),
         SizedBox(
           height: 28,
           child: OutlinedButton(
-            onPressed: () => context.push('/negocio/${resultado.negocioId}'),
+            onPressed: () =>
+                context.push('/negocio/${favorito.negocioId}'),
             style: OutlinedButton.styleFrom(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               textStyle: AppTextStyles.caption
                   .copyWith(fontWeight: FontWeight.w600),
-              side: BorderSide(color: AppColors.primary),
+              side: const BorderSide(color: AppColors.primary),
             ),
             child: const Text('Ver Detalles'),
           ),
@@ -181,8 +128,8 @@ class _OpenBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: abierto
-            ? AppColors.success.withOpacity(0.12)
-            : AppColors.error.withOpacity(0.12),
+            ? AppColors.success.withValues(alpha: 0.12)
+            : AppColors.error.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(
