@@ -10,7 +10,9 @@ import 'features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'features/auth/domain/usecases/login_usecase.dart';
 import 'features/auth/domain/usecases/logout_usecase.dart';
 import 'features/auth/domain/usecases/register_usecase.dart';
+import 'features/auth/domain/usecases/update_profile_usecase.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
+import 'features/auth/presentation/cubit/edit_profile_cubit.dart';
 import 'features/home/data/datasources/home_datasource.dart';
 import 'features/home/data/datasources/supabase_home_datasource.dart';
 import 'features/home/data/repositories/home_repository_impl.dart';
@@ -69,6 +71,7 @@ void _registerExternal() {
 
 Future<void> _registerFeatures() async {
   await _registerAuth();
+  _registerEditProfile();
   _registerHome();
   _registerNegocioDetalle();
   _registerBusqueda();
@@ -105,6 +108,17 @@ Future<void> _registerAuth() async {
   sl.registerLazySingleton<AuthDataSource>(
     () => SupabaseAuthDataSource(sl()),
   );
+}
+
+void _registerEditProfile() {
+  sl.registerFactoryParam<EditProfileCubit, AuthCubit, void>(
+    (authCubit, _) => EditProfileCubit(
+      updateProfileUseCase: sl(),
+      authCubit: authCubit,
+    ),
+  );
+  sl.registerLazySingleton(() => UpdateProfileUseCase(sl()));
+  // AuthRepository and AuthDataSource already registered in _registerAuth
 }
 
 void _registerHome() {

@@ -11,6 +11,9 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/auth/presentation/cubit/edit_profile_cubit.dart';
+import '../../features/auth/presentation/pages/edit_profile_page.dart';
 import '../../features/negocio_detalle/negocio_detalle.dart';
 import '../../features/busqueda/busqueda.dart';
 import '../../features/categoria_productos/categoria_productos.dart';
@@ -65,6 +68,17 @@ class AppRouter {
             child: CategoriaProductosPage(categoriaNombre: nombre),
           );
         },
+      ),
+
+      // ── Edit Profile (sin bottom nav) ────────────────────────────────────
+      GoRoute(
+        path: RouteNames.editarPerfil,
+        builder: (context, _) => BlocProvider(
+          create: (_) => di.sl<EditProfileCubit>(
+            param1: context.read<AuthCubit>(),
+          ),
+          child: const EditProfilePage(),
+        ),
       ),
 
       // ── Negocio detail (sin bottom nav) ──────────────────────────────────
