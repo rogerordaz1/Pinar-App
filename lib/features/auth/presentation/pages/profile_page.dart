@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/core.dart';
 import '../../auth.dart';
 
@@ -27,12 +28,12 @@ class ProfilePage extends StatelessWidget {
               ProfileTile(
                 icon: Icons.favorite_outline,
                 label: 'Mis Favoritos',
-                onTap: null,
+                onTap: () => context.go(RouteNames.favoritos),
               ),
               ProfileTile(
                 icon: Icons.bookmark_outline,
                 label: 'Productos Guardados',
-                onTap: null,
+                onTap: () => context.go(RouteNames.favoritos, extra: 1),
               ),
               ProfileTile(
                 icon: Icons.history,
