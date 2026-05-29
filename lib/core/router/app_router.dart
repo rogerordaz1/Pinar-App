@@ -18,18 +18,6 @@ import '../../features/favoritos/favoritos.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
 
-class _PlaceholderPage extends StatelessWidget {
-  final String name;
-  const _PlaceholderPage(this.name);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(name, style: Theme.of(context).textTheme.titleLarge),
-    );
-  }
-}
-
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: RouteNames.splash,
