@@ -32,6 +32,18 @@ import 'features/categoria_productos/data/repositories/categoria_productos_repos
 import 'features/categoria_productos/domain/repositories/categoria_productos_repository.dart';
 import 'features/categoria_productos/domain/usecases/get_productos_por_categoria_usecase.dart';
 import 'features/categoria_productos/presentation/cubit/categoria_productos_cubit.dart';
+import 'features/favoritos/data/datasources/favoritos_datasource.dart';
+import 'features/favoritos/data/datasources/supabase_favoritos_datasource.dart';
+import 'features/favoritos/data/repositories/negocios_favoritos_repository_impl.dart';
+import 'features/favoritos/data/repositories/productos_favoritos_repository_impl.dart';
+import 'features/favoritos/domain/repositories/negocios_favoritos_repository.dart';
+import 'features/favoritos/domain/repositories/productos_favoritos_repository.dart';
+import 'features/favoritos/domain/usecases/get_negocios_favoritos_usecase.dart';
+import 'features/favoritos/domain/usecases/get_productos_favoritos_usecase.dart';
+import 'features/favoritos/domain/usecases/toggle_negocio_favorito_usecase.dart';
+import 'features/favoritos/domain/usecases/toggle_producto_favorito_usecase.dart';
+import 'features/favoritos/presentation/cubit/negocios_favoritos_cubit.dart';
+import 'features/favoritos/presentation/cubit/productos_favoritos_cubit.dart';
 import 'features/busqueda/data/datasources/busqueda_datasource.dart';
 import 'features/busqueda/data/datasources/supabase_busqueda_datasource.dart';
 import 'features/busqueda/data/repositories/busqueda_repository_impl.dart';
@@ -61,6 +73,7 @@ Future<void> _registerFeatures() async {
   _registerNegocioDetalle();
   _registerBusqueda();
   _registerCategoriaProductos();
+  _registerFavoritos();
 }
 
 Future<void> _registerAuth() async {
@@ -161,5 +174,33 @@ void _registerNegocioDetalle() {
   );
   sl.registerLazySingleton<NegocioDetalleDataSource>(
     () => SupabaseNegocioDetalleDataSource(sl()),
+  );
+}
+
+void _registerFavoritos() {
+  sl.registerFactory(
+    () => NegociosFavoritosCubit(
+      getNegociosFavoritosUseCase: sl(),
+      toggleNegocioFavoritoUseCase: sl(),
+    ),
+  );
+  sl.registerFactory(
+    () => ProductosFavoritosCubit(
+      getProductosFavoritosUseCase: sl(),
+      toggleProductoFavoritoUseCase: sl(),
+    ),
+  );
+  sl.registerLazySingleton(() => GetNegociosFavoritosUseCase(sl()));
+  sl.registerLazySingleton(() => ToggleNegocioFavoritoUseCase(sl()));
+  sl.registerLazySingleton(() => GetProductosFavoritosUseCase(sl()));
+  sl.registerLazySingleton(() => ToggleProductoFavoritoUseCase(sl()));
+  sl.registerLazySingleton<NegociosFavoritosRepository>(
+    () => NegociosFavoritosRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<ProductosFavoritosRepository>(
+    () => ProductosFavoritosRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton<FavoritosDataSource>(
+    () => SupabaseFavoritosDataSource(sl()),
   );
 }
