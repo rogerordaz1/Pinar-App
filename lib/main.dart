@@ -5,6 +5,9 @@ import 'app.dart';
 import 'core/constants/app_constants.dart';
 import 'features/auth/presentation/cubit/auth_cubit.dart';
 import 'features/home/presentation/cubit/home_cubit.dart';
+import 'features/busqueda/presentation/cubit/busqueda_cubit.dart';
+import 'features/favoritos/presentation/cubit/negocios_favoritos_cubit.dart';
+import 'features/favoritos/presentation/cubit/productos_favoritos_cubit.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -22,8 +25,13 @@ void main() async {
       providers: [
         BlocProvider(create: (_) => di.sl<AuthCubit>()),
         BlocProvider(create: (_) => di.sl<HomeCubit>()..loadHome()),
-        // Agregar futuros cubits aquí:
-        // BlocProvider(create: (_) => di.sl<BusquedaCubit>()),
+        BlocProvider(create: (_) => di.sl<BusquedaCubit>()..init()),
+        BlocProvider(
+          create: (_) => di.sl<NegociosFavoritosCubit>()..loadFavoritos(),
+        ),
+        BlocProvider(
+          create: (_) => di.sl<ProductosFavoritosCubit>()..loadFavoritos(),
+        ),
       ],
       child: const App(),
     ),

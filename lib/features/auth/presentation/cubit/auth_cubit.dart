@@ -147,6 +147,12 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  void updateUser(UserEntity user) {
+    if (state is AuthAuthenticated) {
+      emit(AuthAuthenticated(user: user));
+    }
+  }
+
   Future<void> resetPassword({required String newPassword}) async {
     emit(const AuthLoading());
     final result =

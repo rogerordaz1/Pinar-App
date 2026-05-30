@@ -7,6 +7,9 @@ class UserModel {
   final String? telefono;
   final String? avatarUrl;
   final bool esNegocio;
+  final String? direccion;
+  final double? lat;
+  final double? lng;
 
   const UserModel({
     required this.id,
@@ -15,6 +18,9 @@ class UserModel {
     this.telefono,
     this.avatarUrl,
     this.esNegocio = false,
+    this.direccion,
+    this.lat,
+    this.lng,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -25,6 +31,9 @@ class UserModel {
       telefono: map['telefono'] as String?,
       avatarUrl: map['avatar_url'] as String?,
       esNegocio: map['es_negocio'] as bool? ?? false,
+      direccion: map['direccion'] as String?,
+      lat: (map['lat'] as num?)?.toDouble(),
+      lng: (map['lng'] as num?)?.toDouble(),
     );
   }
 
@@ -36,6 +45,9 @@ class UserModel {
       telefono: telefono,
       avatarUrl: avatarUrl,
       esNegocio: esNegocio,
+      direccion: direccion,
+      lat: lat,
+      lng: lng,
     );
   }
 }

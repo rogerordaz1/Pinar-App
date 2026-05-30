@@ -30,6 +30,12 @@
 	<string>Pinar necesita tu ubicación para mostrarte negocios cercanos.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Pinar necesita tu ubicación para mostrarte negocios cercanos.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Para cambiar tu foto de perfil</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Para seleccionar tu foto de perfil</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Para guardar tu foto de perfil</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

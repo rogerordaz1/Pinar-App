@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/errors/exceptions.dart' as app;
+import '../../domain/usecases/update_profile_usecase.dart';
 import '../models/user_model.dart';
 import 'auth_datasource.dart';
 
@@ -137,6 +139,51 @@ class SupabaseAuthDataSource implements AuthDataSource {
       await client.auth.updateUser(UserAttributes(password: newPassword));
     } catch (e) {
       throw app.AuthException(_extractMessage(e));
+    }
+  }
+
+  @override
+  Future<UserModel> updateProfile(UpdateProfileParams params) async {
+    try {
+      final userId = client.auth.currentUser!.id;
+
+      String? newAvatarUrl;
+      if (params.avatarLocalPath != null) {
+        final file = File(params.avatarLocalPath!);
+        await client.storage.from('avatars').upload(
+              '$userId/avatar.jpg',
+              file,
+              fileOptions: const FileOptions(upsert: true),
+            );
+        newAvatarUrl =
+            client.storage.from('avatars').getPublicUrl('$userId/avatar.jpg');
+      }
+
+      final updates = <String, dynamic>{
+        'nombre': params.nombre,
+        if (params.direccion != null) 'direccion': params.direccion,
+        if (params.lat != null) 'lat': params.lat,
+        if (params.lng != null) 'lng': params.lng,
+        if (newAvatarUrl != null) 'avatar_url': newAvatarUrl,
+      };
+
+      final data = await client
+          .from('users')
+          .update(updates)
+          .eq('id', userId)
+          .select()
+          .single();
+
+      // Sync auth metadata (best-effort)
+      try {
+        await client.auth.updateUser(
+          UserAttributes(data: {'nombre': params.nombre}),
+        );
+      } catch (_) {}
+
+      return UserModel.fromMap(data);
+    } catch (e) {
+      throw app.ServerException(_extractMessage(e));
     }
   }
 

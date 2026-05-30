@@ -11,21 +11,15 @@ import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/auth/presentation/pages/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/profile_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
+import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/auth/presentation/cubit/edit_profile_cubit.dart';
+import '../../features/auth/presentation/pages/edit_profile_page.dart';
 import '../../features/negocio_detalle/negocio_detalle.dart';
+import '../../features/busqueda/busqueda.dart';
+import '../../features/categoria_productos/categoria_productos.dart';
+import '../../features/favoritos/favoritos.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
 import 'route_names.dart';
-
-class _PlaceholderPage extends StatelessWidget {
-  final String name;
-  const _PlaceholderPage(this.name);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Text(name, style: Theme.of(context).textTheme.titleLarge),
-    );
-  }
-}
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -62,6 +56,31 @@ class AppRouter {
         builder: (_, __) => const ResetPasswordPage(),
       ),
 
+      // ── Categoria productos (sin bottom nav) ─────────────────────────────
+      GoRoute(
+        path: '/categoria/:id',
+        builder: (_, state) {
+          final categoriaId = state.pathParameters['id'] ?? '';
+          final nombre = state.extra as String? ?? 'Categoría';
+          return BlocProvider(
+            create: (_) => di.sl<CategoriaProductosCubit>()
+              ..loadProductos(categoriaId, nombre),
+            child: CategoriaProductosPage(categoriaNombre: nombre),
+          );
+        },
+      ),
+
+      // ── Edit Profile (sin bottom nav) ────────────────────────────────────
+      GoRoute(
+        path: RouteNames.editarPerfil,
+        builder: (context, _) => BlocProvider(
+          create: (_) => di.sl<EditProfileCubit>(
+            param1: context.read<AuthCubit>(),
+          ),
+          child: const EditProfilePage(),
+        ),
+      ),
+
       // ── Negocio detail (sin bottom nav) ──────────────────────────────────
       GoRoute(
         path: '/negocio/:id',
@@ -95,7 +114,7 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RouteNames.busqueda,
-                builder: (_, __) => const _PlaceholderPage('Buscar'),
+                builder: (_, __) => const BusquedaPage(),
               ),
             ],
           ),
@@ -105,7 +124,10 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: RouteNames.favoritos,
-                builder: (_, __) => const _PlaceholderPage('Favoritos'),
+                builder: (_, state) {
+                  final tab = (state.extra as int?) ?? 0;
+                  return FavoritosPage(initialTabIndex: tab);
+                },
               ),
             ],
           ),

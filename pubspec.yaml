@@ -36,6 +36,10 @@ dependencies:
 
   # Localización del usuario
   geolocator: ^13.0.1
+  geocoding: ^3.0.0
+
+  # Selector de imágenes (cámara / galería)
+  image_picker: ^1.1.2
 
   # Conectividad
   connectivity_plus: ^6.0.3

@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 import '../entities/user_entity.dart';
+import '../usecases/update_profile_usecase.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, UserEntity>> login({
@@ -27,4 +28,6 @@ abstract class AuthRepository {
   });
 
   Future<Either<Failure, void>> resetPassword({required String newPassword});
+
+  Future<Either<Failure, UserEntity>> updateProfile(UpdateProfileParams params);
 }
